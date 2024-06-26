@@ -1,0 +1,18 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: svc-inventory
+  data:
+    mongodb:
+      uri: mongodb+srv:/${DATABASE_USER}:${DATABASE_PASSWORD}@${CLUSTER}.yealtoe.mongodb.net/${INVENTORY_DATABASE_NAME}?retryWrites=true&w=majority&appName=${CLUSTER}
+  config:
+    import: optional:configserver:http://localhost:/8888
+
+eureka:
+  instance:
+    virtual-host-name: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

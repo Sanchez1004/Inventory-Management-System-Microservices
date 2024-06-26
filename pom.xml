@@ -4,29 +4,33 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version>
+    </parent>
+
     <groupId>com.cesar</groupId>
     <artifactId>inv-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>services/inv-service</module>
-        <module>services/not-service</module>
-        <module>services/rep-service</module>
-        <module>services/us-service</module>
+        <module>/inv-service</module>
+        <module>/not-service</module>
+        <module>/rep-service</module>
+        <module>/us-service</module>
+        <module>gateway-service</module>
+        <module>eureka-service </module>
+        <module>config-server-service</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-aop</artifactId>
-                <version>3.3.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mageddo.lombok</groupId>
-                <artifactId>lombok-ext</artifactId>
-                <version>2.4.4</version>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.32</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -35,13 +39,9 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
-                    <configuration>
-                        <source>22</source>
-                        <target>22</target>
-                    </configuration>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>3.3.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
