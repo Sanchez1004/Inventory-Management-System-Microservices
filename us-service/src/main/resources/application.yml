@@ -1,18 +1,18 @@
 server:
-  port: 8090
+  port: 8091
 
 spring:
   application:
     name: svc-inventory
   data:
     mongodb:
-      uri: mongodb+srv://cesar:cesar123456@cluster0.yealtoe.mongodb.net/inventory-system?retryWrites=true&w=majority&appName=Cluster0
+      uri: ${MONGOURI}
   config:
     import: optional:configserver:http://localhost:/8888
 
 eureka:
   instance:
-    virtual-host-name: localhost
+    hostname: localhost
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka/

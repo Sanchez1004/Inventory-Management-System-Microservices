@@ -1,0 +1,8 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: svc-inventory
+  config:
+    import: optional:configserver:http://localhost:/8888

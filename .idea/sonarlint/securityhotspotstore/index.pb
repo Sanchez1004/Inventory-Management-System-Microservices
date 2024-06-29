@@ -4,8 +4,6 @@
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-G
-gateway-service/pom.xml,6\2\627bed90df51db9ce1f2c987c3ddc0380c236bae
 y
 Iinv-service/src/main/java/com/cesar/invservice/InvServiceApplication.java,5\e\5e97250ab031bd2bb337dbbf7113a0169ac426ac
 C
@@ -18,8 +16,6 @@ B
 us-service/pom.xml,f\e\feaf81c463d3c5a139eeda897ee1283d807b2827
 y
 Irep-service/src/main/java/com/cesar/repservice/RepServiceApplication.java,8\8\8861a562de37cc33ae5637bed2f1c5ecb652aab0
-H
-gateway-service/mvnw.cmd,d\9\d900909e2cfdf42f7e848b842b9451774db468f1
 F
 eureka-service/pom.xml,3\e\3e68d6f421b04d410578ccc97a8773a1a687a9ec
 M
@@ -32,15 +28,15 @@ r
 Bus-service/src/main/java/com/cesar/usservice/model/UserEntity.java,1\2\125f3d0c34adfe91f80599e036e7ed5d26e4a4f6
 {
 Kus-service/src/main/java/com/cesar/usservice/repository/UserRepository.java,1\8\1895c9d42b883f30cdec2a11bb082a7a3bc54966
-w
-Gus-service/src/main/java/com/cesar/usservice/config/SecurityConfig.java,b\2\b28142d399ce412f11f3dd48fce8031ff74ac957
+u
+Eus-service/src/main/java/com/cesar/usservice/service/UserService.java,b\8\b80dccba3a3420c7c4d0850302691c7a750f5a54
+ƒ
+Sus-service/src/main/java/com/cesar/usservice/service/UserServiceImplementation.java,a\7\a754350e460861fe8c2379d38230a17e3d20cf20
+{
+Kus-service/src/main/java/com/cesar/usservice/controller/UserController.java,e\6\e62dddb78cd70185d954f63080e3a1f51e188ccb
+C
+api-gateway/pom.xml,2\b\2bfa2b108f2439e99e004f4085b58c22cf995f73
+†
+Vapi-gateway/src/main/java/com/cesar/gatewayservice/config/RestClientConfiguration.java,d\8\d86b434777ad2c3f5985fce3775d976cf4238ae2
 }
-Mus-service/src/main/java/com/cesar/usservice/jwt/JwtAuthenticationFilter.java,2\d\2d25eed10ce384480e270ac7e0e3c64fe65558d3
-p
-@us-service/src/main/java/com/cesar/usservice/jwt/JwtService.java,6\1\6123a96b9601f53d6eaf68e05fb27cac5a5dee81
-t
-Dus-service/src/main/java/com/cesar/usservice/jwt/JwtServiceImpl.java,4\e\4e31e567173f8218653b0870c4badf12a421f68b
-~
-Nus-service/src/main/java/com/cesar/usservice/jwt/JwtServiceImplementation.java,a\1\a18a8c0c05df2056c2dc05e0911a38d5b40b651d
-?
-us-service/.env,b\9\b9b8d14544208e0780487bc1850050a875eeed1f
+Mapi-gateway/src/main/java/com/cesar/gatewayservice/ApiGatewayApplication.java,1\f\1f3a0f24e0f8c56ee4999f990ff56047a8fd556b
