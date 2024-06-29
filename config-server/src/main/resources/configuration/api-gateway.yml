@@ -10,22 +10,22 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: us-service-route
-          uri: lb://us-service #http://localhost:8091
+        - id: us-service
+          uri: lb://us-service
           predicates:
             - Path=/api/users/**
 
-        - id: inv-service-route
-          uri: lb://inv-service #http://localhost:8090
+        - id: inv-service
+          uri: lb://inv-service
           predicates:
             - Path=/api/inventories/**
 
-        - id: rep-service-route
+        - id: rep-service
           uri: lb://rep-service
           predicates:
             - Path=/api/reports/**
 
-        - id: not-service-route
+        - id: not-service
           uri: lb://not-service
           predicates:
             - Path=/api/notifications/**

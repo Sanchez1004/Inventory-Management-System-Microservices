@@ -42,3 +42,11 @@ Mapi-gateway/src/main/java/com/cesar/gatewayservice/ApiGatewayApplication.java,
 Oconfig-server/src/main/java/com/cesar/configserver/ConfigServerApplication.java,7\5\75d2fbec8a8da980c44872c3c47fcc3d6e3f8084
 E
 config-server/pom.xml,a\2\a2f9618c8ad821b143a07a29a9805fcb0b2df470
+n
+>config-server/src/main/resources/configuration/inv-service.yml,6\e\6eabb0e6cbb050de3a33b6d24d8369d57eb3bfc5
+m
+=config-server/src/main/resources/configuration/us-service.yml,b\7\b7869bb08019b33c7758ad5c44fe40daef1f2ed4
+„
+Tapi-gateway/src/main/java/com/cesar/gatewayservice/controller/GatewayController.java,8\2\829e280f49cf69db029b84edd4adc01fff50a982
+‡
+Wapi-gateway/src/main/java/com/cesar/gatewayservice/controller/ApiGatewayController.java,6\d\6de83903c7c1014ef0087fdc941fadfaa602725f
