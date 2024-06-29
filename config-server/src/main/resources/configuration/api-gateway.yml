@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: us-service-route
+          uri: lb://us-service #http://localhost:8091
+          predicates:
+            - Path=/api/users/**
+
+        - id: inv-service-route
+          uri: lb://inv-service #http://localhost:8090
+          predicates:
+            - Path=/api/inventories/**
+
+        - id: rep-service-route
+          uri: lb://rep-service
+          predicates:
+            - Path=/api/reports/**
+
+        - id: not-service-route
+          uri: lb://not-service
+          predicates:
+            - Path=/api/notifications/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

@@ -1,29 +1,5 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: api-gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: us-service-route
-          uri: http://localhost:8091
-          predicates:
-            - Path=/api/users/**
-
-        - id: inv-service-route
-          uri: http://localhost:8090
-          predicates:
-            - Path=/api/inventories/**
-
   config:
-    import: optional:configserver:http://localhost:/8888
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+    import: optional:configserver:http://localhost:8888

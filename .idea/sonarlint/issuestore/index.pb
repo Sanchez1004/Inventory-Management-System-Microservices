@@ -32,3 +32,7 @@ F
 eureka-service/pom.xml,3\e\3e68d6f421b04d410578ccc97a8773a1a687a9ec
 }
 Mapi-gateway/src/main/java/com/cesar/gatewayservice/ApiGatewayApplication.java,1\f\1f3a0f24e0f8c56ee4999f990ff56047a8fd556b
+
+Oconfig-server/src/main/java/com/cesar/configserver/ConfigServerApplication.java,7\5\75d2fbec8a8da980c44872c3c47fcc3d6e3f8084
+E
+config-server/pom.xml,a\2\a2f9618c8ad821b143a07a29a9805fcb0b2df470

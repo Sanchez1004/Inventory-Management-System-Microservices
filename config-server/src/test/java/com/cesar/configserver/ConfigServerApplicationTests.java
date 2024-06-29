@@ -1,10 +1,10 @@
-package com.cesar.configserverservice;
+package com.cesar.configserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ConfigServerServiceApplicationTests {
+class ConfigServerApplicationTests {
 
     @Test
     void contextLoads() {

@@ -1,18 +1,5 @@
-server:
-  port: 8091
-
 spring:
   application:
-    name: svc-inventory
-  data:
-    mongodb:
-      uri: ${MONGOURI}
+    name: us-service
   config:
-    import: optional:configserver:http://localhost:/8888
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+    import: optional:configserver:http://localhost:8888
