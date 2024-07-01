@@ -1,5 +1,6 @@
 package com.cesar.usservice.service;
 
+import com.cesar.usservice.UserException;
 import com.cesar.usservice.dto.UserDTO;
 import com.cesar.usservice.dto.UserMapper;
 import com.cesar.usservice.model.UserEntity;
@@ -7,6 +8,7 @@ import com.cesar.usservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -23,5 +25,21 @@ public class UserServiceImplementation implements UserService {
     public List<UserDTO> findUsersByRole(String role) {
         List<UserEntity> userEntities = userRepository.findAllByRole(role);
         return userEntities.stream().map(userMapper::toUserDTO).toList();
+    }
+
+    @Override
+    public UserDTO findByEmail(String email) {
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        Optional<UserDTO> userDTO = userEntity.map(userMapper::toUserDTO);
+        return userDTO.orElseThrow(() -> new UserException("No user found with email: " + email));
+    }
+
+    @Override
+    public void save(UserDTO user) {
+        if (user == null) {
+            throw new UserException("User cannot be null");
+        }
+
+        userRepository.save(userMapper.toUserEntity(user));
     }
 }
