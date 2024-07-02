@@ -1,6 +1,6 @@
 package com.cesar.usservice.service;
 
-import com.cesar.usservice.UserException;
+import com.cesar.usservice.exception.UserException;
 import com.cesar.usservice.dto.UserDTO;
 import com.cesar.usservice.dto.UserMapper;
 import com.cesar.usservice.model.UserEntity;

@@ -6,7 +6,7 @@ spring:
     name: us-service
   data:
     mongodb:
-      uri: ${MONGOURI}
+      uri: ${MONGOURI_USERS}
 
 eureka:
   instance:

@@ -74,3 +74,5 @@ y
 Ius-service/src/main/java/com/cesar/usservice/service/AuthServiceImpl.java,3\1\31a89c398251415b7e6206182c3ef224dd5e59de
 z
 Jus-service/src/main/java/com/cesar/usservice/config/ApplicationConfig.java,c\8\c81f8ea0022513213b26d198fb720ead8bf278c5
+r
+Bus-service/src/main/java/com/cesar/usservice/dto/AuthResponse.java,e\7\e7104f7400acbe577f2dfcb66872a29b4dc774b6

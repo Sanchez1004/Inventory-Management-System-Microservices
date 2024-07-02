@@ -1,0 +1,15 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: us-service
+  data:
+    mongodb:
+      uri: ${MONGOURI_USERS}
+
+eureka:
+  client:
+    enabled: false
+  instance:
+    enabled: false

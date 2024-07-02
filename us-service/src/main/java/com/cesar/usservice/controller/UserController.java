@@ -1,6 +1,6 @@
 package com.cesar.usservice.controller;
 
-import com.cesar.usservice.UserException;
+import com.cesar.usservice.exception.UserException;
 import com.cesar.usservice.dto.UserDTO;
 import com.cesar.usservice.service.UserService;
 import org.springframework.http.HttpStatus;

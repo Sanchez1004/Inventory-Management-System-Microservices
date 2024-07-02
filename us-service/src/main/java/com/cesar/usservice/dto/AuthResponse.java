@@ -1,4 +1,4 @@
-package com.cesar.usservice;
+package com.cesar.usservice.dto;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +18,10 @@ import java.util.function.Function;
 
 import static io.jsonwebtoken.Jwts.builder;
 
-/**
- * Implementation of the JWT service for token generation and validation.
- */
 @Service
 public class JwtServiceImplementation implements JwtService {
 
-    @Value("${jwtKey}")
-    private String secretKey;
+    private String secretKey = "ASD87A7H90A8C0S9A8s89ad98D87d89YD78yd78ADhd7HDdADH7adhIADuidDadA";
 
     private static final long TOKEN_VALIDITY = Duration.ofDays(1).toMillis();
 

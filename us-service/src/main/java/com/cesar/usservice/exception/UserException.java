@@ -1,4 +1,4 @@
-package com.cesar.usservice;
+package com.cesar.usservice.exception;
 
 public class UserException extends RuntimeException {
     public UserException (String message) {

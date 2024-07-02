@@ -1,6 +1,6 @@
 package com.cesar.usservice.service;
 
-import com.cesar.usservice.AuthResponse;
+import com.cesar.usservice.dto.AuthResponse;
 import com.cesar.usservice.dto.LoginRequest;
 import com.cesar.usservice.dto.RegisterRequest;
 import com.cesar.usservice.dto.UserDTO;
