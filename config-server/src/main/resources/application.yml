@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: native # We can configure this to use other profiles
+    active: native
   application:
     name: config-server
   cloud:
