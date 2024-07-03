@@ -20,6 +20,7 @@
         <module>not-service</module>
         <module>rep-service</module>
         <module>us-service</module>
+        <module>auth-service</module>
         <module>api-gateway</module>
         <module>eureka-service</module>
         <module>config-server</module>

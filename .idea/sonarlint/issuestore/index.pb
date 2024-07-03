@@ -62,3 +62,9 @@ r
 Bus-service/src/main/java/com/cesar/usservice/dto/AuthResponse.java,e\7\e7104f7400acbe577f2dfcb66872a29b4dc774b6
 {
 Kus-service/src/main/java/com/cesar/usservice/controller/AuthController.java,4\b\4bf6d6b536060ac12e62321f2af09eec8196687c
+I
+auth-service/build.gradle,4\a\4a6d6e3774c104b659f46b81b4ecdc80e3d7baaf
+D
+auth-service/HELP.md,0\1\01642ff8ebe12f8e29261cf656ce939373475e22
+D
+auth-service/pom.xml,7\f\7f617cadbbc161fc020296c3a971388d61795426
