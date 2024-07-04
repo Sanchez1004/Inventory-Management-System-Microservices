@@ -1,5 +1,6 @@
 package com.cesar.authservice.service;
 
+import com.cesar.authservice.AuthException;
 import com.cesar.authservice.client.UserServiceClient;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
@@ -21,7 +22,13 @@ public class AuthServiceImplementation implements AuthService {
     private final UserServiceClient userServiceClient;
 
     public AuthResponse login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        } catch (AuthException e) {
+            throw new AuthException("Invalid credentials");
+        }
+
         User user = findByEmail(loginRequest.getEmail());
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
