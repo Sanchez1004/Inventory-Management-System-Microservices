@@ -1,9 +1,10 @@
-package com.cesar.usservice.service;
+package com.cesar.authservice.service;
 
-import com.cesar.usservice.dto.AuthResponse;
-import com.cesar.usservice.dto.LoginRequest;
-import com.cesar.usservice.dto.RegisterRequest;
-import com.cesar.usservice.dto.UserDTO;
+import com.cesar.authservice.client.UserServiceClient;
+import com.cesar.authservice.dto.AuthResponse;
+import com.cesar.authservice.dto.LoginRequest;
+import com.cesar.authservice.dto.RegisterRequest;
+import com.cesar.authservice.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +15,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImplementation implements AuthService {
 
-    private final UserService userService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserServiceClient userServiceClient;
 
     public AuthResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        UserDTO user = userService.findByEmail(loginRequest.getEmail());
+        User user = findByEmail(loginRequest.getEmail());
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
@@ -29,7 +30,7 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     public AuthResponse register(RegisterRequest registerRequest) {
-        UserDTO user = UserDTO.builder()
+        User user = User.builder()
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .firstName(registerRequest.getFirstName())
@@ -37,11 +38,19 @@ public class AuthServiceImplementation implements AuthService {
                 .role("USER")
                 .build();
 
-        userService.save(user);
+        save(user);
 
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
                 .build();
+    }
+
+    private User findByEmail(String email) {
+        return userServiceClient.findByEmail(email);
+    }
+
+    private void save(User user) {
+        userServiceClient.saveUser(user);
     }
 }
 

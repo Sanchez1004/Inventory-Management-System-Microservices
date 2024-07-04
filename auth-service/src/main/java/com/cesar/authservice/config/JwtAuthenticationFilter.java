@@ -1,6 +1,6 @@
-package com.cesar.usservice.config;
+package com.cesar.authservice.config;
 
-import com.cesar.usservice.service.JwtService;
+import com.cesar.authservice.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

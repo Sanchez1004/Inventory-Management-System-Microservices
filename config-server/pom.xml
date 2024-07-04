@@ -11,7 +11,7 @@
     <artifactId>config-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>config-server-service</name>
-    <description>config-server-service</description>
+    <description>config-server</description>
     <url/>
     <licenses>
         <license/>

@@ -1,11 +1,12 @@
-package com.cesar.usservice.service;
+package com.cesar.authservice.service;
 
-import com.cesar.usservice.dto.UserDTO;
+import com.cesar.authservice.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,8 @@ import static io.jsonwebtoken.Jwts.builder;
 @Service
 public class JwtServiceImplementation implements JwtService {
 
-    private String secretKey = "ASD87A7H90A8C0S9A8s89ad98D87d89YD78yd78ADhd7HDdADH7adhIADuidDadA";
+    @Value("${secret.key}")
+    private String secretKey;
 
     private static final long TOKEN_VALIDITY = Duration.ofDays(1).toMillis();
 
@@ -59,11 +61,11 @@ public class JwtServiceImplementation implements JwtService {
     }
 
     @Override
-    public String getToken(UserDTO user) {
+    public String getToken(User user) {
         return getToken(new HashMap<>(), user);
     }
 
-    private String getToken(Map<String, Object> extraClaims, UserDTO user) {
+    private String getToken(Map<String, Object> extraClaims, User user) {
         return builder()
                 .claims(extraClaims)
                 .claim("userId", user.getId())

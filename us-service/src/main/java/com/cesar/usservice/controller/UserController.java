@@ -5,10 +5,7 @@ import com.cesar.usservice.dto.UserDTO;
 import com.cesar.usservice.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -28,6 +25,22 @@ public class UserController {
         try {
             List<UserDTO> listOfUsers = userService.findUsersByRole(role);
             return ResponseEntity.ok(listOfUsers);
+        } catch (UserException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/find-by-email")
+    public ResponseEntity<UserDTO> findByEmail(@RequestParam String email) {
+        UserDTO userFound = userService.findByEmail(email);
+        return ResponseEntity.ok(userFound);
+    }
+
+    @PutMapping("/save")
+    public ResponseEntity<Void> saveUser(@RequestBody UserDTO userDTO) {
+        try {
+            userService.save(userDTO);
+            return ResponseEntity.ok().build();
         } catch (UserException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }

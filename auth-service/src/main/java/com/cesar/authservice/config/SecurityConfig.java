@@ -1,4 +1,4 @@
-package com.cesar.usservice.config;
+package com.cesar.authservice.config;
 
 
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/api/users/hello", "/api/users/auth").permitAll()
-                                .requestMatchers("/api/users/hello2").hasRole("ADMIN")
+                                .requestMatchers("/api/auth/login","/api/auth/register", "/api/auth/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

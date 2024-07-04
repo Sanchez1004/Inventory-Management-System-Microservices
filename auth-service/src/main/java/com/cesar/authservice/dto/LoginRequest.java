@@ -1,4 +1,4 @@
-package com.cesar.usservice.dto;
+package com.cesar.authservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;

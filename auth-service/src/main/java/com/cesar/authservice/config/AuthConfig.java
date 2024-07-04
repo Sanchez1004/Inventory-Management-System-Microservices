@@ -1,7 +1,10 @@
-package com.cesar.usservice.config;
+package com.cesar.authservice.config;
 
-import com.cesar.usservice.repository.UserRepository;
+import com.cesar.authservice.client.UserServiceClient;
+import com.cesar.authservice.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,9 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+@AllArgsConstructor
+public class AuthConfig {
 
-    private final UserRepository userRepository;
+    public UserServiceClient userServiceClient;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -37,10 +41,16 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public UserDetailsService userDetailService() {
-        return email -> userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email not found"));
+        return email -> {
+            User user = userServiceClient.findByEmail(email);
+            if (user == null) {
+                throw new UsernameNotFoundException("Email not found");
+            }
+            return user;
+        };
     }
 }
 

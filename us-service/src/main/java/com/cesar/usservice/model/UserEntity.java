@@ -7,12 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
 
 @Document(collection = "users")
 @Setter
@@ -20,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity implements UserDetails {
+public class UserEntity {
     @MongoId
     private String id;
     private String firstName;
@@ -32,14 +26,4 @@ public class UserEntity implements UserDetails {
    public String getRoleWithPrefix() {
        return "ROLE_" + this.role;
    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(getRoleWithPrefix()));
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
 }
