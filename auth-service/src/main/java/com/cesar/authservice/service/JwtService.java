@@ -1,6 +1,6 @@
 package com.cesar.authservice.service;
 
-import com.cesar.authservice.entity.User;
+import com.cesar.authservice.dto.User;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.function.Function;

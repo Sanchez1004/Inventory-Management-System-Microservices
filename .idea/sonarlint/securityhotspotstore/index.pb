@@ -92,3 +92,17 @@ u
 Eus-service/src/main/java/com/cesar/usservice/security/JwtService.java,b\8\b8bd92277505b1f85e44b2fc80ad67ce9bd52885
 ƒ
 Sus-service/src/main/java/com/cesar/usservice/security/JwtServiceImplementation.java,d\c\dca15c6614864ea16af1b3bef54f7a8db5b1dfba
+z
+Jus-service/src/main/java/com/cesar/usservice/client/AuthServiceClient.java,3\0\30ede12a4415c15241ef20a980f75b7507ee0193
+s
+Cauth-service/src/main/java/com/cesar/authservice/entity/Client.java,a\1\a15063649e792215b575c265844f8113970981c8
+n
+>auth-service/src/main/java/com/cesar/authservice/dto/User.java,3\7\37bbf5bb9c43ea53aa4dc1f8aa8fff790e35cd3c
+t
+Dus-service/src/main/java/com/cesar/usservice/model/ClientEntity.java,0\f\0fd09d5109b9b1eae9b5133912f9c70301273b82
+}
+Mus-service/src/main/java/com/cesar/usservice/repository/ClientRepository.java,6\c\6c1219a5b7c7dea02b50e6d583cee9df2d995237
+„
+Tus-service/src/main/java/com/cesar/usservice/security/CustomAuthenticationToken.java,9\8\98b825aa229137c46ccaac981703ef711262ea41
+y
+Ius-service/src/main/java/com/cesar/usservice/security/SecurityConfig.java,7\d\7d134e28df2f795ca1b8a1dc677eae1ffebb6a90

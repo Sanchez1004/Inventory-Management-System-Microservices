@@ -5,7 +5,7 @@ import com.cesar.authservice.client.UserServiceClient;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
-import com.cesar.authservice.entity.User;
+import com.cesar.authservice.dto.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

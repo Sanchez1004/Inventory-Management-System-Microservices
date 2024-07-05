@@ -1,12 +1,16 @@
 package com.cesar.authservice.controller;
 
 import com.cesar.authservice.AuthException;
+import com.cesar.authservice.client.UserServiceClient;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
 import com.cesar.authservice.service.AuthService;
+import com.cesar.authservice.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,9 +19,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, JwtService jwtService, UserDetailsService userDetailsService) {
         this.authService = authService;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/register")
@@ -37,6 +45,26 @@ public class AuthController {
         } catch (AuthException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            int beginIndex = 7;
+            String jwtToken = token.substring(beginIndex);
+            String email = jwtService.getEmailFromToken(jwtToken);
+
+            if (email != null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                if (jwtService.isTokenValid(jwtToken, userDetails)) {
+                    return ResponseEntity.ok().build();
+                }
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping

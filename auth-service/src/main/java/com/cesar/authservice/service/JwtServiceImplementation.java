@@ -1,6 +1,6 @@
 package com.cesar.authservice.service;
 
-import com.cesar.authservice.entity.User;
+import com.cesar.authservice.dto.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

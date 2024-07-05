@@ -1,4 +1,4 @@
-package com.cesar.authservice.entity;
+package com.cesar.authservice.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -25,13 +25,13 @@ public class User implements UserDetails {
     private String password;
     private String role;
 
+    public String getRoleWithPrefix() {
+        return "ROLE_" + this.role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(getRoleWithPrefix()));
-    }
-
-    public String getRoleWithPrefix() {
-        return "ROLE_" + this.role;
     }
 
     @Override

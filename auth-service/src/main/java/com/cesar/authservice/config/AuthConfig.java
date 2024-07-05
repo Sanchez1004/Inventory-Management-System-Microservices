@@ -1,7 +1,7 @@
 package com.cesar.authservice.config;
 
 import com.cesar.authservice.client.UserServiceClient;
-import com.cesar.authservice.entity.User;
+import com.cesar.authservice.dto.User;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
