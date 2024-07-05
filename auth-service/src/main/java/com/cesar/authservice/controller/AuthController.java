@@ -1,7 +1,6 @@
 package com.cesar.authservice.controller;
 
 import com.cesar.authservice.AuthException;
-import com.cesar.authservice.client.UserServiceClient;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
@@ -66,6 +65,21 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    public ResponseEntity<String> getEmailFromToken(@RequestHeader("Authorization") String token) {
+        try {
+            String jwtToken = token.substring(7);
+            String email = jwtService.getEmailFromToken(jwtToken);
+            if (email != null) {
+                return ResponseEntity.ok(email);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
 
     @GetMapping
     String hello() {

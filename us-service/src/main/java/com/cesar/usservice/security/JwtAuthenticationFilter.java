@@ -1,12 +1,19 @@
 package com.cesar.usservice.security;
 
 import com.cesar.usservice.client.AuthServiceClient;
-import lombok.RequiredArgsConstructor;
+import com.cesar.usservice.model.UserEntity;
+import com.cesar.usservice.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,10 +25,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private final UserDetailsService userDetailsService;
     private final AuthServiceClient authServiceClient;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -36,8 +45,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         ResponseEntity<Void> authResponse = authServiceClient.validateToken("Bearer " + token);
 
         if (authResponse.getStatusCode() == HttpStatus.OK) {
-            SecurityContextHolder.getContext().setAuthentication(new CustomAuthenticationToken(token, null, null));
-            filterChain.doFilter(request, response);
+            ResponseEntity<String> emailResponse = authServiceClient.getEmailFromToken("Bearer " + token);
+            if (emailResponse.getStatusCode() == HttpStatus.OK) {
+                String email = emailResponse.getBody();
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                filterChain.doFilter(request, response);
+            }
         } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
@@ -52,5 +70,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    @Bean
+    public UserDetailsService userDetailService() {
+        return email -> {
+            UserEntity user = userService.getUserByEmail(email);
+            if (user == null) {
+                throw new UsernameNotFoundException("Email not found");
+            }
+            return user;
+        };
     }
 }

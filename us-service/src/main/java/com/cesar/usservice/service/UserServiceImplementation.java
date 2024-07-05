@@ -67,6 +67,12 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
+    public UserEntity getUserByEmail(String email) {
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        return userEntity.orElseThrow(() -> new UserException("No user found with email: " + email));
+    }
+
+    @Override
     public void save(UserDTO user) {
         if (user != null) {
             if (user.getEmail() != null && user.getPassword() != null) {
