@@ -3,7 +3,7 @@ package com.cesar.usservice.security;
 import com.cesar.usservice.client.AuthServiceClient;
 import com.cesar.usservice.model.UserEntity;
 import com.cesar.usservice.service.UserService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,12 +25,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final AuthServiceClient authServiceClient;
     private final UserService userService;
+
+    @Value("${API_TOKEN}")
+    private String apiToken;
+
+    public JwtAuthenticationFilter(UserDetailsService userDetailsService, AuthServiceClient authServiceClient, UserService userService) {
+        this.userDetailsService = userDetailsService;
+        this.authServiceClient = authServiceClient;
+        this.userService = userService;
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -42,10 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        ResponseEntity<Void> authResponse = authServiceClient.validateToken("Bearer " + token);
+        ResponseEntity<Void> authResponse = authServiceClient.validateToken("Bearer " + token, apiToken);
 
         if (authResponse.getStatusCode() == HttpStatus.OK) {
-            ResponseEntity<String> emailResponse = authServiceClient.getEmailFromToken("Bearer " + token);
+            ResponseEntity<String> emailResponse = authServiceClient.getEmailFromToken("Bearer " + token, apiToken);
             if (emailResponse.getStatusCode() == HttpStatus.OK) {
                 String email = emailResponse.getBody();
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);

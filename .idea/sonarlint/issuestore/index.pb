@@ -88,3 +88,7 @@ n
 Tus-service/src/main/java/com/cesar/usservice/security/CustomAuthenticationToken.java,9\8\98b825aa229137c46ccaac981703ef711262ea41
 y
 Ius-service/src/main/java/com/cesar/usservice/security/SecurityConfig.java,7\d\7d134e28df2f795ca1b8a1dc677eae1ffebb6a90
+v
+Fus-service/src/main/java/com/cesar/usservice/security/FeignConfig.java,d\2\d22be6a01be143127160ece7a8fe493adef36d4e
+t
+Dus-service/src/main/java/com/cesar/usservice/client/FeignConfig.java,b\7\b7ed1b92bd7f72e21cf31a0eef42e27c769145d2

@@ -6,6 +6,7 @@ import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
 import com.cesar.authservice.service.AuthService;
 import com.cesar.authservice.service.JwtService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,9 @@ public class AuthController {
     private final AuthService authService;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+
+    @Value("${API_KEY}")
+    private String expectedApiKey;
 
     public AuthController(AuthService authService, JwtService jwtService, UserDetailsService userDetailsService) {
         this.authService = authService;
@@ -47,7 +51,11 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestHeader("x-api-key") String apiKey) {
+        if (!expectedApiKey.equals(apiKey)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             int beginIndex = 7;
             String jwtToken = token.substring(beginIndex);
@@ -66,7 +74,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    public ResponseEntity<String> getEmailFromToken(@RequestHeader("Authorization") String token) {
+    @GetMapping("/get-email")
+    public ResponseEntity<String> getEmailFromToken(@RequestHeader("Authorization") String token, @RequestHeader("x-api-key") String apiKey) {
+        if (!expectedApiKey.equals(apiKey)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             String jwtToken = token.substring(7);
             String email = jwtService.getEmailFromToken(jwtToken);
@@ -80,9 +93,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-
     @GetMapping
     String hello() {
         return "hello";
     }
 }
+
