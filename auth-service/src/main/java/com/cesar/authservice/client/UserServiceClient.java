@@ -11,5 +11,5 @@ public interface UserServiceClient {
     User findByEmail(@RequestParam String email);
 
     @PutMapping("/api/users/save")
-    ResponseEntity<?> saveUser(@RequestBody User user);
+    ResponseEntity<Void> saveUser(@RequestBody User user);
 }

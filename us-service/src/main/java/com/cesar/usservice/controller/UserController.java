@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/get-all-users")
     public ResponseEntity<List<UserDTO>> findAllUsersByRole(@RequestParam String role) {
         try {
             List<UserDTO> listOfUsers = userService.findUsersByRole(role);

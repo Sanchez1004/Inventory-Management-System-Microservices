@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity implements UserDetails {
+public class UserEntity {
     @MongoId
     private String id;
     private String firstName;
@@ -29,17 +29,7 @@ public class UserEntity implements UserDetails {
     private String password;
     private String role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(getRoleWithPrefix()));
-    }
-
     private String getRoleWithPrefix() {
         return ("ROLE_" + this.role);
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
     }
 }

@@ -1,72 +1,66 @@
 package com.cesar.usservice.security;
 
 import com.cesar.usservice.client.AuthServiceClient;
-import com.cesar.usservice.model.UserEntity;
-import com.cesar.usservice.service.UserService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
     private final AuthServiceClient authServiceClient;
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
-    @Value("${API_TOKEN}")
-    private String apiToken;
-
-    public JwtAuthenticationFilter(UserDetailsService userDetailsService, AuthServiceClient authServiceClient, UserService userService) {
-        this.userDetailsService = userDetailsService;
-        this.authServiceClient = authServiceClient;
-        this.userService = userService;
-    }
+    @Value("${API_KEY}")
+    private String apiKey;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
+        final ResponseEntity<String> emailResponse;
 
         if (token == null) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            filterChain.doFilter(request, response);
             return;
         }
 
-        ResponseEntity<Void> authResponse = authServiceClient.validateToken("Bearer " + token, apiToken);
+        emailResponse = authServiceClient.getEmailFromToken(token, apiKey);
 
-        if (authResponse.getStatusCode() == HttpStatus.OK) {
-            ResponseEntity<String> emailResponse = authServiceClient.getEmailFromToken("Bearer " + token, apiToken);
-            if (emailResponse.getStatusCode() == HttpStatus.OK) {
-                String email = emailResponse.getBody();
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        if (emailResponse != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            String email = emailResponse.getBody();
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+            if (Boolean.TRUE.equals(authServiceClient.validateToken(token, apiKey).getBody())) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities());
+
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                filterChain.doFilter(request, response);
             }
-        } else {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
+
+        filterChain.doFilter(request, response);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
@@ -80,14 +74,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    @Bean
-    public UserDetailsService userDetailService() {
-        return email -> {
-            UserEntity user = userService.getUserByEmail(email);
-            if (user == null) {
-                throw new UsernameNotFoundException("Email not found");
-            }
-            return user;
-        };
-    }
+
 }

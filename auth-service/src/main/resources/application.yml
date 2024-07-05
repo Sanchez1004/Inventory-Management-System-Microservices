@@ -5,6 +5,3 @@ spring:
     name: auth-service
   config:
     import: optional:configserver:http://localhost:8888
-
-secret:
-  key: ${SECRET_KEY}

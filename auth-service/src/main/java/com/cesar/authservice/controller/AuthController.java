@@ -51,7 +51,7 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token, @RequestHeader("x-api-key") String apiKey) {
+    public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String token, @RequestHeader("x-api-key") String apiKey) {
         if (!expectedApiKey.equals(apiKey)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -63,9 +63,8 @@ public class AuthController {
 
             if (email != null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                    return ResponseEntity.ok().build();
-                }
+                return ResponseEntity.ok(jwtService.isTokenValid(jwtToken, userDetails));
+
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
