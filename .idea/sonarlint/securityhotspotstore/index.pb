@@ -84,3 +84,11 @@ w
 Gauth-service/src/main/java/com/cesar/authservice/config/AuthConfig.java,7\7\77a2b6b25eb860d52234c88ed27151892752ef60
 y
 Iauth-service/src/main/java/com/cesar/authservice/dto/RegisterRequest.java,d\2\d2d16896ebf3c8851d202fde3486027bfee41887
+q
+Aus-service/src/main/java/com/cesar/usservice/utils/UserField.java,b\2\b2a8b62747b57379a553cb274baeee74891b57f7
+‚
+Rus-service/src/main/java/com/cesar/usservice/security/JwtAuthenticationFilter.java,9\6\964a4c485f262b305652daf6d321bc6955589bbf
+u
+Eus-service/src/main/java/com/cesar/usservice/security/JwtService.java,b\8\b8bd92277505b1f85e44b2fc80ad67ce9bd52885
+ƒ
+Sus-service/src/main/java/com/cesar/usservice/security/JwtServiceImplementation.java,d\c\dca15c6614864ea16af1b3bef54f7a8db5b1dfba

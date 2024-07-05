@@ -22,8 +22,4 @@ public class UserEntity {
     private String email;
     private String password;
     private String role;
-
-   public String getRoleWithPrefix() {
-       return "ROLE_" + this.role;
-   }
 }
