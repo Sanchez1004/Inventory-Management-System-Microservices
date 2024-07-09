@@ -74,13 +74,10 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public void save(UserDTO user) {
-        if (user != null) {
-            if (user.getEmail() != null && user.getPassword() != null) {
-                if (!userExistsByEmail(user.getEmail())) {
-                    userRepository.save(userMapper.toUserEntity(user));
-                }
-            }
+        if (user != null && user.getEmail() != null && user.getPassword() != null && !userExistsByEmail(user.getEmail())) {
+            userRepository.save(userMapper.toUserEntity(user));
         }
+
         throw new UserException("User cannot be null");
     }
 

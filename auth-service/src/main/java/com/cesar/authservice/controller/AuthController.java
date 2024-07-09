@@ -5,13 +5,15 @@ import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
 import com.cesar.authservice.service.AuthService;
-import com.cesar.authservice.service.JwtService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -19,16 +21,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
 
     @Value("${API_KEY}")
     private String expectedApiKey;
 
-    public AuthController(AuthService authService, JwtService jwtService, UserDetailsService userDetailsService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/register")
@@ -55,22 +53,11 @@ public class AuthController {
         if (!expectedApiKey.equals(apiKey)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         try {
-            int beginIndex = 7;
-            String jwtToken = token.substring(beginIndex);
-            String email = jwtService.getEmailFromToken(jwtToken);
-
-            if (email != null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-                return ResponseEntity.ok(jwtService.isTokenValid(jwtToken, userDetails));
-
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.ok(authService.validateToken(token));
+        } catch (AuthException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
         }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/get-email")
@@ -78,18 +65,11 @@ public class AuthController {
         if (!expectedApiKey.equals(apiKey)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         try {
-            String jwtToken = token.substring(7);
-            String email = jwtService.getEmailFromToken(jwtToken);
-            if (email != null) {
-                return ResponseEntity.ok(email);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.ok(authService.getEmailFromToken(token));
+        } catch (AuthException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
         }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping

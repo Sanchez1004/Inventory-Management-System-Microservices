@@ -1,6 +1,6 @@
 package com.cesar.usservice.security;
 
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,15 +13,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationProvider = authenticationProvider;
-    }
 
     @Bean
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -29,7 +25,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/api/users/hello", "/api/users/get-all-users").permitAll()
+                                .requestMatchers("/api/users/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

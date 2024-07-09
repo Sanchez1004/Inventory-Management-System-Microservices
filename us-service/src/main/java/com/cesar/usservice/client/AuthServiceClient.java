@@ -2,6 +2,7 @@ package com.cesar.usservice.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -12,4 +13,5 @@ public interface AuthServiceClient {
 
     @GetMapping("/api/auth/get-email")
     ResponseEntity<String> getEmailFromToken(@RequestHeader("Authorization") String token, @RequestHeader("x-api-key") String apiKey);
+
 }

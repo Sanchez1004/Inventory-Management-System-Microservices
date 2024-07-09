@@ -1,10 +1,12 @@
-package com.cesar.authservice.dto;
+package com.cesar.authservice.entity;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +19,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+@Document(collection = "auth-users")
+public class AuthUser implements UserDetails {
+    @MongoId
     private String id;
     private String firstName;
     private String lastName;

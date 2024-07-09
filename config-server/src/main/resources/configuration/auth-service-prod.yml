@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: auth-service
+  data:
+    mongodb:
+      uri: ${MONGOURI_AUTH_USERS}
 
 eureka:
   client:

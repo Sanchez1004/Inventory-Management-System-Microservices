@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,28 +23,25 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final AuthServiceClient authServiceClient;
     private final UserDetailsService userDetailsService;
 
     @Value("${API_KEY}")
-    private String apiKey;
+    String apiKey;
 
-    @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String token = getTokenFromRequest(request);
-        final ResponseEntity<String> emailResponse;
+        final String email;
 
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        emailResponse = authServiceClient.getEmailFromToken(token, apiKey);
+        email = authServiceClient.getEmailFromToken(token, apiKey).getBody();
 
-        if (emailResponse != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            String email = emailResponse.getBody();
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
             if (Boolean.TRUE.equals(authServiceClient.validateToken(token, apiKey).getBody())) {
@@ -73,6 +69,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return null;
     }
-
-
 }

@@ -1,7 +1,8 @@
 package com.cesar.authservice.config;
 
 import com.cesar.authservice.client.UserServiceClient;
-import com.cesar.authservice.dto.User;
+import com.cesar.authservice.entity.AuthUser;
+import com.cesar.authservice.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 public class AuthConfig {
 
-    private UserServiceClient userServiceClient;
+    private final AuthService authService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -42,11 +43,11 @@ public class AuthConfig {
     @Bean
     public UserDetailsService userDetailService() {
         return email -> {
-            User user = userServiceClient.findByEmail(email);
-            if (user == null) {
+            AuthUser authUser = authService.findUserByEmail(email);
+            if (authUser == null) {
                 throw new UsernameNotFoundException("Email not found");
             }
-            return user;
+            return authUser;
         };
     }
 }

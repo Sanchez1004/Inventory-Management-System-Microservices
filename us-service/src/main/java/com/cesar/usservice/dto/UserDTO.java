@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO implements UserDetails {
-    private String id;
     private String firstName;
     private String lastName;
     private String email;

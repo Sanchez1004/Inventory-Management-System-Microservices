@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 public class AuthConfig {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -38,7 +38,6 @@ public class AuthConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public UserDetailsService userDetailService() {
         return email -> {
@@ -50,4 +49,3 @@ public class AuthConfig {
         };
     }
 }
-

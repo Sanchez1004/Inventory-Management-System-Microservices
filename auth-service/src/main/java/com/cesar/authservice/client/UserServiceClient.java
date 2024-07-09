@@ -1,15 +1,15 @@
 package com.cesar.authservice.client;
 
-import com.cesar.authservice.dto.User;
+import com.cesar.authservice.entity.AuthUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "US-SERVICE")
+@FeignClient(name = "us-service")
 public interface UserServiceClient {
     @PostMapping("/api/users/find-by-email")
-    User findByEmail(@RequestParam String email);
+    ResponseEntity<AuthUser> findByEmail(@RequestParam String email);
 
     @PutMapping("/api/users/save")
-    ResponseEntity<Void> saveUser(@RequestBody User user);
+    ResponseEntity<Void> saveUser(@RequestBody AuthUser authUser);
 }

@@ -1,7 +1,5 @@
 package com.cesar.authservice.config;
 
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,7 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/api/auth/login","/api/auth/register", "/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

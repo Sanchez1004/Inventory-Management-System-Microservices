@@ -1,6 +1,6 @@
 package com.cesar.authservice.service;
 
-import com.cesar.authservice.dto.User;
+import com.cesar.authservice.entity.AuthUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -28,7 +28,7 @@ public class JwtServiceImplementation implements JwtService {
     private static final long TOKEN_VALIDITY = Duration.ofDays(1).toMillis();
 
     @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public Boolean isTokenValid(String token, UserDetails userDetails) {
         final String email = getEmailFromToken(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
@@ -52,6 +52,11 @@ public class JwtServiceImplementation implements JwtService {
         return getClaim(token, Claims::getSubject);
     }
 
+    @Override
+    public String getRoleFromToken(String token) {
+        return getAllClaims(token).get("ROLE", String.class);
+    }
+
     private Date getExpirationDate(String token) {
         return getClaim(token, Claims::getExpiration);
     }
@@ -61,16 +66,16 @@ public class JwtServiceImplementation implements JwtService {
     }
 
     @Override
-    public String getToken(User user) {
-        return getToken(new HashMap<>(), user);
+    public String getToken(AuthUser authUser) {
+        return getToken(new HashMap<>(), authUser);
     }
 
-    private String getToken(Map<String, Object> extraClaims, User user) {
+    private String getToken(Map<String, Object> extraClaims, AuthUser authUser) {
         return builder()
                 .claims(extraClaims)
-                .claim("userId", user.getId())
-                .claim("ROLE", user.getRole())
-                .subject(user.getUsername())
+                .id(authUser.getId())
+                .claim("ROLE", authUser.getRole())
+                .subject(authUser.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))
                 .signWith(getKey())
