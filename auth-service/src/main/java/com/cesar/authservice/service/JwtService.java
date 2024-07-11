@@ -6,9 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.function.Function;
 
 public interface JwtService {
-    String getToken(AuthUser authUser);
+    String createToken(UserDetails userDetails);
     String getEmailFromToken(String token);
-    String getRoleFromToken(String token);
     Boolean isTokenValid(String token, UserDetails userDetails);
     <T> T getClaim(String token, Function<Claims, T> claimsResolver);
 }

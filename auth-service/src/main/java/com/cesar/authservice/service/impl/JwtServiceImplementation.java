@@ -1,6 +1,6 @@
-package com.cesar.authservice.service;
+package com.cesar.authservice.service.impl;
 
-import com.cesar.authservice.entity.AuthUser;
+import com.cesar.authservice.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -34,8 +34,7 @@ public class JwtServiceImplementation implements JwtService {
     }
 
     private Claims getAllClaims(String token) {
-        return Jwts
-                .parser()
+        return Jwts.parser()
                 .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token)
@@ -52,11 +51,6 @@ public class JwtServiceImplementation implements JwtService {
         return getClaim(token, Claims::getSubject);
     }
 
-    @Override
-    public String getRoleFromToken(String token) {
-        return getAllClaims(token).get("ROLE", String.class);
-    }
-
     private Date getExpirationDate(String token) {
         return getClaim(token, Claims::getExpiration);
     }
@@ -66,16 +60,14 @@ public class JwtServiceImplementation implements JwtService {
     }
 
     @Override
-    public String getToken(AuthUser authUser) {
-        return getToken(new HashMap<>(), authUser);
+    public String createToken(UserDetails userDetails) {
+        return getToken(new HashMap<>(), userDetails);
     }
 
-    private String getToken(Map<String, Object> extraClaims, AuthUser authUser) {
+    private String getToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return builder()
                 .claims(extraClaims)
-                .id(authUser.getId())
-                .claim("ROLE", authUser.getRole())
-                .subject(authUser.getUsername())
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))
                 .signWith(getKey())
