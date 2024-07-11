@@ -2,6 +2,7 @@ package com.cesar.authservice.service.impl;
 
 import com.cesar.authservice.AuthException;
 import com.cesar.authservice.dto.AuthResponse;
+import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
 import com.cesar.authservice.entity.AuthUser;
 import com.cesar.authservice.entity.Role;
@@ -40,5 +41,16 @@ public class AuthServiceImplementation implements AuthService {
                     .build();
         }
         throw new AuthException("There was an error creating the user");
+    }
+
+    @Override
+    public AuthResponse login(LoginRequest loginRequest) {
+        if (loginRequest.getEmail() != null && loginRequest.getPassword() != null) {
+            UserDetails userDetails = authUserService.userDetailsService().loadUserByUsername(loginRequest.getEmail());
+            return AuthResponse.builder()
+                    .token(jwtService.createToken(userDetails))
+                    .build();
+        }
+        throw new AuthException("Bad credentials");
     }
 }
