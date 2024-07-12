@@ -3,11 +3,10 @@ package com.cesar.usservice.service;
 import com.cesar.usservice.exception.UserException;
 import com.cesar.usservice.dto.UserDTO;
 import com.cesar.usservice.dto.UserMapper;
+import com.cesar.usservice.model.Role;
 import com.cesar.usservice.model.UserEntity;
 import com.cesar.usservice.repository.UserRepository;
 import com.cesar.usservice.utils.UserField;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
@@ -93,13 +92,10 @@ public class UserServiceImplementation implements UserService {
             throw new UserException("User request cannot be null");
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userRole = authentication.getAuthorities().stream().findFirst().orElseThrow().getAuthority();
-
         UserEntity userEntity = getUserById(id);
 
         for (Map.Entry<UserField, BiConsumer<UserEntity, UserDTO>> entry : updateFieldMap.entrySet()) {
-            if (entry.getKey() == UserField.ROLE && !userRole.equals("ROLE_ADMIN")) {
+            if (entry.getKey() == UserField.ROLE && userEntity.getRole() == Role.ADMIN) {
                 continue;
             }
             entry.getValue().accept(userEntity, userDTO);

@@ -25,7 +25,8 @@ public class JwtServiceImplementation implements JwtService {
     @Value("${secret.key}")
     private String secretKey;
 
-    private static final long TOKEN_VALIDITY = Duration.ofDays(1).toMillis();
+    private static final long DEFAULT_TOKEN_VALIDITY = Duration.ofDays(1).toMillis();
+    private static final long REFRESH_TOKEN_VALIDITY = Duration.ofDays(7).toMillis();
 
     @Override
     public Boolean isTokenValid(String token, UserDetails userDetails) {
@@ -61,10 +62,15 @@ public class JwtServiceImplementation implements JwtService {
 
     @Override
     public String createToken(UserDetails userDetails) {
-        return getToken(new HashMap<>(), userDetails);
+        return getToken(new HashMap<>(), userDetails, DEFAULT_TOKEN_VALIDITY);
     }
 
-    private String getToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    @Override
+    public String createRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return getToken(extraClaims, userDetails, REFRESH_TOKEN_VALIDITY);
+    }
+
+    private String getToken(Map<String, Object> extraClaims, UserDetails userDetails, long TOKEN_VALIDITY) {
         return builder()
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
