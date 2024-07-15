@@ -4,15 +4,19 @@ import com.cesar.authservice.AuthException;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
+import com.cesar.authservice.entity.AuthUser;
+import com.cesar.authservice.entity.AuthUserDTO;
 import com.cesar.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,7 +46,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/get-email")
+    @GetMapping("/extract-email")
     ResponseEntity<String> getEmailFromToken(@RequestParam("token") String token, @RequestParam("apiKey") String apiKey) {
         if (!apiKey.equals(defaultApiKey)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -67,9 +71,19 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/get-auth")
-    Authentication getAuthentication(String token) {
-        return authService.getAuthentication(token);
+    @GetMapping("get-user-by-email")
+    ResponseEntity<AuthUserDTO> getUserByEmail(@RequestParam String email, @RequestParam String apiKey) {
+        if (!apiKey.equals(defaultApiKey)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        if (email == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email cannot be empty");
+        }
+        try {
+            return ResponseEntity.ok(authService.getUserByEmail(email));
+        } catch (AuthException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 }
 

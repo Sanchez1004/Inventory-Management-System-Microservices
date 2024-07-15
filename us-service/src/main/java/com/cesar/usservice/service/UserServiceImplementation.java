@@ -3,7 +3,7 @@ package com.cesar.usservice.service;
 import com.cesar.usservice.exception.UserException;
 import com.cesar.usservice.dto.UserDTO;
 import com.cesar.usservice.dto.UserMapper;
-import com.cesar.usservice.model.Role;
+import com.cesar.usservice.security.Role;
 import com.cesar.usservice.model.UserEntity;
 import com.cesar.usservice.repository.UserRepository;
 import com.cesar.usservice.utils.UserField;

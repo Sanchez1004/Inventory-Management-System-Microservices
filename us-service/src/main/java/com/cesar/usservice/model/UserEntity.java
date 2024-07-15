@@ -1,5 +1,6 @@
 package com.cesar.usservice.model;
 
+import com.cesar.usservice.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;

@@ -100,3 +100,17 @@ Qus-service/src/main/java/com/cesar/usservice/config/CustomUserDetailsService.ja
 Ous-service/src/main/java/com/cesar/usservice/repository/AuthUserRepository.java,b\4\b426ba5e4b79caf19f8df5aa0aadc88c4a573942
 p
 @us-service/src/main/java/com/cesar/usservice/model/AuthUser.java,5\8\5854f3aa3c2473817b044aa79a59e03578d82c13
+y
+Ius-service/src/main/java/com/cesar/usservice/security/SecurityConfig.java,7\d\7d134e28df2f795ca1b8a1dc677eae1ffebb6a90
+ƒ
+Sus-service/src/main/java/com/cesar/usservice/security/CustomUserDetailsService.java,a\b\abd4a24b6629823e2ffa3097b1676566d7e6c6f0
+‚
+Rus-service/src/main/java/com/cesar/usservice/security/JwtAuthentitationFilter.java,9\3\93367de976c3b8f61f4bfdd02b2173a55976b951
+s
+Cus-service/src/main/java/com/cesar/usservice/security/AuthUser.java,5\4\5491200bdff684b7796eb3d9f44ac16dd833fd2f
+x
+Hauth-service/src/main/java/com/cesar/authservice/entity/AuthUserDTO.java,4\a\4a2e5d15e34bcbd8a7ee70eafd491fff3c7ec461
+q
+Aus-service/src/main/java/com/cesar/usservice/dto/AuthUserDTO.java,9\e\9e4c6abbbe5412fca04e9142140b06c3e89cfa8e
+v
+Fus-service/src/main/java/com/cesar/usservice/security/AuthUserDTO.java,3\c\3c94160528738cb5ebd879bccbaa4a64c9b56110

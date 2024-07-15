@@ -1,4 +1,4 @@
-package com.cesar.usservice.config;
+package com.cesar.usservice.security;
 
 import com.cesar.usservice.client.AuthServiceClient;
 import jakarta.servlet.FilterChain;
@@ -51,11 +51,11 @@ public class JwtAuthentitationFilter extends OncePerRequestFilter {
             logger.info("Email from token: " + userEmail);
 
             if (StringUtils.isNotEmpty(userEmail)  && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.userDetailsService().loadUserByUsername(userEmail);
-                logger.info("User details loaded: " + userDetails.getUsername());
-
                 if (Boolean.TRUE.equals(authServiceClient.validateToken(jwt, apiKey).getBody())) {
                     logger.info("Token is valid");
+
+                    UserDetails userDetails = userDetailsService.userDetailsService().loadUserByUsername(userEmail);
+                    logger.info("User details loaded: " + userDetails.getUsername());
 
                     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

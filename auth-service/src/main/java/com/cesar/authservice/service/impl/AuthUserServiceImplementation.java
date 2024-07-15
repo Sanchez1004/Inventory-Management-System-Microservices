@@ -1,7 +1,7 @@
 package com.cesar.authservice.service.impl;
 
-import com.cesar.authservice.AuthException;
 import com.cesar.authservice.entity.AuthUser;
+import com.cesar.authservice.entity.AuthUserDTO;
 import com.cesar.authservice.repository.AuthUserRepository;
 import com.cesar.authservice.service.AuthUserService;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +40,15 @@ public class AuthUserServiceImplementation implements AuthUserService {
     }
 
     @Override
-    public AuthUser findUserByEmail(String email) {
-        Optional<AuthUser> user = authUserRepository.findByEmail(email);
-        return user.orElseThrow(() -> new AuthException("User not found"));
+    public AuthUserDTO findUserByEmail(String email) {
+        AuthUser authUser = authUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return AuthUserDTO.builder()
+                .id(authUser.getId())
+                .email(authUser.getEmail())
+                .password(authUser.getPassword())
+                .role(authUser.getRole())
+                .build();
     }
 }

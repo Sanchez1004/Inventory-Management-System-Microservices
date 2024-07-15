@@ -1,4 +1,4 @@
-package com.cesar.authservice.dto;
+package com.cesar.authservice.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthUserDTO {
-    private String firstName;
-    private String lastName;
+    private String id;
     private String email;
     private String password;
-    private String role;
+    private Role role;
 }

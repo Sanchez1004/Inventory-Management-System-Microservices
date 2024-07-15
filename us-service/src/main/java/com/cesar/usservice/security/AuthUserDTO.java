@@ -1,12 +1,10 @@
-package com.cesar.usservice.model;
+package com.cesar.usservice.security;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +17,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "auth-users")
-public class AuthUser implements UserDetails {
-    @Id
+public class AuthUserDTO implements UserDetails {
     private String id;
-    private String firstName;
-    private String lastName;
     private String email;
     private String password;
     private Role role;

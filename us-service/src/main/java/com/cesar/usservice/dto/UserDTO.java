@@ -1,6 +1,6 @@
 package com.cesar.usservice.dto;
 
-import com.cesar.usservice.model.Role;
+import com.cesar.usservice.security.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

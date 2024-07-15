@@ -5,6 +5,7 @@ import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
 import com.cesar.authservice.entity.AuthUser;
+import com.cesar.authservice.entity.AuthUserDTO;
 import com.cesar.authservice.entity.Role;
 
 import com.cesar.authservice.service.AuthService;
@@ -13,7 +14,6 @@ import com.cesar.authservice.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -85,10 +85,12 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     @Override
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = authUserService.userDetailsService().loadUserByUsername(jwtService.getEmailFromToken(token));
-        return new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities()
-        );
+    public AuthUserDTO getUserByEmail(String email) {
+        return authUserService.findUserByEmail(email);
+    }
+
+    @Override
+    public UserDetails getUserDetails(String email) {
+        return authUserService.userDetailsService().loadUserByUsername(email);
     }
 }
