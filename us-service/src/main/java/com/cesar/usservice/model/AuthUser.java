@@ -1,4 +1,4 @@
-package com.cesar.authservice.entity;
+package com.cesar.usservice.model;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -22,13 +22,13 @@ import java.util.List;
 @Document(collection = "auth-users")
 public class AuthUser implements UserDetails {
     @Id
-        private String id;
-        private String firstName;
-        private String lastName;
-        private String email;
-        private String password;
-        private Role role;
-    
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private Role role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -58,6 +58,4 @@ public class AuthUser implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
-
-
 }

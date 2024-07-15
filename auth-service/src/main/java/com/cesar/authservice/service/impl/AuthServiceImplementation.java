@@ -13,8 +13,8 @@ import com.cesar.authservice.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,10 @@ public class AuthServiceImplementation implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest registerRequest) {
+        if (authUserService.userExistsByEmail(registerRequest.getEmail())) {
+            throw new AuthException("Email already in use");
+        }
+
         if (registerRequest.getEmail() != null && registerRequest.getPassword() != null) {
             authUserService.save(AuthUser.builder()
                             .email(registerRequest.getEmail())
@@ -51,6 +55,10 @@ public class AuthServiceImplementation implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
+        if (!authUserService.userExistsByEmail(loginRequest.getEmail())) {
+            throw new AuthException("Check email, no email found");
+        }
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(), loginRequest.getPassword()));
 
@@ -71,21 +79,16 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     @Override
-    public UserDetails getUserDetailsByEmail(String email) {
-        if (email != null) {
-            return authUserService.userDetailsService().loadUserByUsername(email);
-
-        }
-        throw new AuthException("Email cannot be empty");
+    public Boolean validateToken(String token) {
+        UserDetails userDetails = authUserService.userDetailsService().loadUserByUsername(jwtService.getEmailFromToken(token));
+        return Boolean.TRUE.equals(jwtService.isTokenValid(token, userDetails));
     }
 
     @Override
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        return jwtService.isTokenValid(token, userDetails);
-    }
-
-    @Override
-    public UserDetailsService getUserDetailsService() {
-        return authUserService.userDetailsService();
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = authUserService.userDetailsService().loadUserByUsername(jwtService.getEmailFromToken(token));
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities()
+        );
     }
 }

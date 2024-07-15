@@ -34,6 +34,7 @@ spring:
           uri: lb://not-service
           predicates:
             - Path=/api/notifications/**
+
 eureka:
   client:
     service-url:

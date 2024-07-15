@@ -9,13 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -26,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @Value("${API_KEY}")
-    String APIKEY;
+    String defaultApiKey;
 
     @PostMapping("/register")
     ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
@@ -47,8 +43,8 @@ public class AuthController {
     }
 
     @GetMapping("/get-email")
-    ResponseEntity<String> getEmailFromToken(String token, String apiKey) {
-        if (!apiKey.equals(APIKEY)) {
+    ResponseEntity<String> getEmailFromToken(@RequestParam("token") String token, @RequestParam("apiKey") String apiKey) {
+        if (!apiKey.equals(defaultApiKey)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         try {
@@ -58,40 +54,22 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/get-user-details")
-    ResponseEntity<UserDetails> getUserDetailsByEmail(String email, String apiKey) {
-        if (!apiKey.equals(APIKEY)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        try {
-            return ResponseEntity.ok(authService.getUserDetailsByEmail(email));
-        } catch (AuthException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
-    }
-
     @GetMapping("/validate-token")
-    ResponseEntity<Boolean> validateToken(String token, UserDetails userDetails, String apiKey) {
-        if (!apiKey.equals(APIKEY)) {
+    ResponseEntity<Boolean> validateToken(@RequestParam("token") String token,
+                                          @RequestParam("apiKey") String apiKey) {
+        if (!apiKey.equals(defaultApiKey)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         try {
-            return ResponseEntity.ok(authService.validateToken(token, userDetails));
+            return ResponseEntity.ok(authService.validateToken(token));
         } catch (AuthException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
-    @GetMapping("/get-user-details-service")
-    ResponseEntity<UserDetailsService> getUserDetailsService(String apiKey) {
-        if (!apiKey.equals(APIKEY)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        try {
-            return ResponseEntity.ok(authService.getUserDetailsService());
-        } catch (AuthException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
+    @GetMapping("/get-auth")
+    Authentication getAuthentication(String token) {
+        return authService.getAuthentication(token);
     }
 }
 

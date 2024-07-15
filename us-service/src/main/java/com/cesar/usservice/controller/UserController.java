@@ -28,6 +28,9 @@ public class UserController {
 
     @GetMapping("/get-all-users")
     public ResponseEntity<List<UserDTO>> findAllUsersByRole(@RequestParam String role) {
+        if (role.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role cannot be empty");
+        }
         try {
             List<UserDTO> listOfUsers = userService.findUsersByRole(role);
             return ResponseEntity.ok(listOfUsers);
