@@ -18,6 +18,7 @@
     <modules>
         <module>inv-service</module>
         <module>not-service</module>
+        <module>ord-service</module>
         <module>rep-service</module>
         <module>us-service</module>
         <module>auth-service</module>

@@ -114,3 +114,7 @@ q
 Aus-service/src/main/java/com/cesar/usservice/dto/AuthUserDTO.java,9\e\9e4c6abbbe5412fca04e9142140b06c3e89cfa8e
 v
 Fus-service/src/main/java/com/cesar/usservice/security/AuthUserDTO.java,3\c\3c94160528738cb5ebd879bccbaa4a64c9b56110
+o
+?us-service/src/main/java/com/cesar/usservice/security/Role.java,0\1\0108cf5fdcb983e662c919909032805e741612e9
+C
+ord-service/pom.xml,d\c\dc5d4521afa7f8aeb24608b0da6d674eb40f38e4
