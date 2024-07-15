@@ -9,7 +9,7 @@
     </parent>
     <artifactId>api-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gateway-service</name>
+    <name>api-gateway</name>
     <description>gateway-service</description>
     <url/>
     <licenses>
@@ -115,7 +115,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>gateway-service</finalName>
+        <finalName>api-gateway</finalName>
     </build>
 
 </project>
