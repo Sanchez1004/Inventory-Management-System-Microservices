@@ -8,6 +8,8 @@ import com.cesar.usservice.repository.ClientRepository;
 import com.cesar.usservice.service.ClientService;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.utils.ClientField;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
@@ -18,6 +20,8 @@ import java.util.function.BiConsumer;
 
 @Service
 public class ClientServiceImpl implements ClientService {
+
+    private static final Logger logger = LogManager.getLogger(ClientServiceImpl.class);
 
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
@@ -79,6 +83,7 @@ public class ClientServiceImpl implements ClientService {
                     .stream().map(clientMapper::toDTO)
                     .toList();
         }
+        logger.error("Keyword cannot be empty!");
         throw new ClientException("keyword cannot be empty!");
     }
 
@@ -95,7 +100,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO saveClient(ClientDTO clientDTO) {
         if (clientDTO.getId() != null && clientDTO.getFirstName() != null && clientDTO.getEmail() != null) {
-            if (clientRepository.findByIdAndEmailAndFirstName(clientDTO.getId(), clientDTO.getFirstName(), clientDTO.getEmail()) != null) {
+            if (clientRepository.findById(clientDTO.getId()).isPresent()) {
                 throw new ClientException("User already exists");
             }
             return clientMapper.toDTO(clientRepository.save(clientMapper.toEntity(clientDTO)));

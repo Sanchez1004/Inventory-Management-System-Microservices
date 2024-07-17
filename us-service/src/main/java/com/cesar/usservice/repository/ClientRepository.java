@@ -19,8 +19,6 @@ public interface ClientRepository extends MongoRepository<ClientEntity, String> 
             "] }")
     List<ClientEntity> findClientsByKeyword (String keyword);
 
-    ClientEntity findByIdAndEmailAndFirstName(String id, String email, String firstName);
-
     @Query("{ 'pendingOrders.id': ?0 }")
     Optional<ClientEntity> findByOrderDetailsId(String orderId);
 }

@@ -10,7 +10,7 @@ public interface ClientService {
     List<ClientDTO> getListOfClientsByKeyword(String keyword);
     ClientDTO getClientByOrderId(String orderId);
     ClientDTO saveClient(ClientDTO clientDTO);
-    ClientDTO updateClientById(ClientDTO clientDTwO, String id);
+    ClientDTO updateClientById(ClientDTO clientDTO, String id);
     ClientDTO updateClientOrdersByClientId(OrderDetails orderDetails, String id);
     ClientDTO updateClientOrderStatusByClientId(String orderId, String newOrderStatus, String clientId);
     String deleteClientById(String id);
