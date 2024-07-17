@@ -1,16 +1,12 @@
 package com.cesar.usservice.service.implementation;
 
-import com.cesar.usservice.dto.ClientDTO;
 import com.cesar.usservice.dto.SupplierDTO;
-import com.cesar.usservice.dto.mapper.ClientMapper;
 import com.cesar.usservice.dto.mapper.SupplierMapper;
-import com.cesar.usservice.entity.ClientEntity;
 import com.cesar.usservice.entity.SupplierEntity;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.exception.SupplierException;
 import com.cesar.usservice.repository.SupplierRepository;
 import com.cesar.usservice.service.SupplierService;
-import com.cesar.usservice.utils.ClientField;
 import com.cesar.usservice.utils.SupplierField;
 import org.springframework.stereotype.Service;
 

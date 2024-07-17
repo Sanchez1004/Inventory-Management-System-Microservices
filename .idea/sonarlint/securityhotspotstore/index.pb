@@ -130,3 +130,5 @@ w
 Gord-service/src/main/java/com/cesar/ordservice/dto/OrderDetailsDTO.java,b\5\b594e32a4c91cf00f38c633a5c78b40d4b534ff3
 u
 Eus-service/src/main/java/com/cesar/usservice/utils/SupplierField.java,3\9\391290b8f73e7064aec8676537bed70204c6c8e7
+€
+Pus-service/src/main/java/com/cesar/usservice/controller/PublicEndpointClass.java,e\f\effda747e732da244f76934ec6da7f7272747e5c

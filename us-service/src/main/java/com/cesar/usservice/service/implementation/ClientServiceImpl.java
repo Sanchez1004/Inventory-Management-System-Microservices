@@ -73,6 +73,16 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public List<ClientDTO> getListOfClientsByKeyword(String keyword) {
+        if (!keyword.isEmpty()) {
+            return clientRepository.findClientsByKeyword(keyword)
+                    .stream().map(clientMapper::toDTO)
+                    .toList();
+        }
+        throw new ClientException("keyword cannot be null!");
+    }
+
+    @Override
     public ClientDTO getClientByOrderId(String id) {
         return null;
     }
