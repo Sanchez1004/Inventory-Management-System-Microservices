@@ -1,12 +1,15 @@
 package com.cesar.usservice.security;
 
 import com.cesar.usservice.client.AuthServiceClient;
+import com.cesar.usservice.service.implementation.ClientServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,6 +24,9 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthentitationFilter extends OncePerRequestFilter {
+
+    // we have the option to use this logger form log4j2, or we can use de bean from generic filter bean
+//   private static final Logger logger = LogManager.getLogger(JwtAuthentitationFilter.class);
 
     private final AuthServiceClient authServiceClient;
     private final CustomUserDetailsService userDetailsService;

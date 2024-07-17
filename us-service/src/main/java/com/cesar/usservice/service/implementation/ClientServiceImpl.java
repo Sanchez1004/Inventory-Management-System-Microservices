@@ -90,6 +90,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO getClientByOrderId(String orderId) {
         if (orderId.isEmpty()) {
+            logger.error("Order id cannot be empty!");
             throw new ClientException("Order id cannot be Empty");
         }
 
@@ -101,16 +102,19 @@ public class ClientServiceImpl implements ClientService {
     public ClientDTO saveClient(ClientDTO clientDTO) {
         if (clientDTO.getId() != null && clientDTO.getFirstName() != null && clientDTO.getEmail() != null) {
             if (clientRepository.findById(clientDTO.getId()).isPresent()) {
+                logger.info("User with id : {} already exists", clientDTO.getId());
                 throw new ClientException("User already exists");
             }
             return clientMapper.toDTO(clientRepository.save(clientMapper.toEntity(clientDTO)));
         }
+        logger.error("Basic fields of new client are empty");
         throw new ClientException("User id, email and first name cannot be empty");
     }
 
     @Override
     public ClientDTO updateClientById(ClientDTO clientDTO, String id) {
         if (clientDTO == null) {
+            logger.error("At least one attribute has to not be null");
             throw new ClientException("User request cannot be null");
         }
 
@@ -126,6 +130,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO updateClientOrdersByClientId(OrderDetails orderDetails, String id) {
         if (orderDetails == null) {
+            logger.error("User details cannot be null, every field must be full");
             throw new ClientException("The order details cannot be empty");
         }
         ClientEntity clientEntity = clientMapper.toEntity(getClientById(id));
@@ -160,6 +165,7 @@ public class ClientServiceImpl implements ClientService {
             clientRepository.delete(clientEntity);
             return "Client with id: " + id + " was successfully deleted";
         }
+        logger.info("Client with id: {} not found", id);
         throw new ClientException("Client with id: " + id + " not found");
     }
 }

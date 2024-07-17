@@ -8,6 +8,8 @@ import com.cesar.usservice.exception.SupplierException;
 import com.cesar.usservice.repository.SupplierRepository;
 import com.cesar.usservice.service.SupplierService;
 import com.cesar.usservice.utils.SupplierField;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
@@ -16,6 +18,8 @@ import java.util.function.BiConsumer;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
+
+    private static final Logger logger = LogManager.getLogger(SupplierServiceImpl.class);
 
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
@@ -71,6 +75,7 @@ public class SupplierServiceImpl implements SupplierService {
     public SupplierDTO saveSupplier(SupplierDTO supplierDTO) {
         if (supplierDTO.getId() != null && supplierDTO.getName() != null && supplierDTO.getEmail() != null) {
             if (supplierRepository.findSupplierEntityByIdAndNameAndEmail(supplierDTO.getId(), supplierDTO.getName(), supplierDTO.getEmail()) != null) {
+                logger.info("User already exists with id {}", supplierDTO.getId());
                 throw new SupplierException("User already exists");
             }
             return supplierMapper.toDTO(supplierRepository.save(supplierMapper.toEntity(supplierDTO)));
@@ -81,7 +86,8 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public SupplierDTO updateSupplierById(SupplierDTO supplierDTO, String id) {
         if (supplierDTO == null) {
-            throw new ClientException("User request cannot be null");
+            logger.error("At least one field of the new supplier has to be not null");
+            throw new ClientException("Supplier request cannot be null");
         }
 
         SupplierEntity supplierEntity = supplierMapper.toEntity(getSupplierById(id));
@@ -100,6 +106,7 @@ public class SupplierServiceImpl implements SupplierService {
             supplierRepository.delete(supplierEntity);
             return "User with id: " + id + "successfully deleted";
         }
+        logger.info("User not found with id {}", id);
         throw new SupplierException("User not found with id: " + id);
     }
 }
