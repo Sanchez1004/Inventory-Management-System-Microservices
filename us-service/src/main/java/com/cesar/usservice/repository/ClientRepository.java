@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository extends MongoRepository<ClientEntity, String> {
+
     Optional<ClientEntity> findClientEntityById(String id);
 
     @Query("{ '$or': [ " +
@@ -17,5 +18,9 @@ public interface ClientRepository extends MongoRepository<ClientEntity, String> 
             "  { 'id': { $regex: ?0, $options: 'i' } } " +
             "] }")
     List<ClientEntity> findClientsByKeyword (String keyword);
+
     ClientEntity findByIdAndEmailAndFirstName(String id, String email, String firstName);
+
+    @Query("{ 'pendingOrders.id': ?0 }")
+    Optional<ClientEntity> findByOrderDetailsId(String orderId);
 }

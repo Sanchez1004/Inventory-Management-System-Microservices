@@ -8,9 +8,9 @@ import java.util.List;
 public interface ClientService {
     ClientDTO getClientById(String id);
     List<ClientDTO> getListOfClientsByKeyword(String keyword);
-    ClientDTO getClientByOrderId(String id);
+    ClientDTO getClientByOrderId(String orderId);
     ClientDTO saveClient(ClientDTO clientDTO);
-    ClientDTO updateClient(ClientDTO clientDTO, String id);
+    ClientDTO updateClientById(ClientDTO clientDTwO, String id);
     ClientDTO updateClientOrdersByClientId(OrderDetails orderDetails, String id);
     ClientDTO updateClientOrderStatusByClientId(String orderId, String newOrderStatus, String clientId);
     String deleteClientById(String id);

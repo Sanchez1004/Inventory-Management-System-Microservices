@@ -79,12 +79,17 @@ public class ClientServiceImpl implements ClientService {
                     .stream().map(clientMapper::toDTO)
                     .toList();
         }
-        throw new ClientException("keyword cannot be null!");
+        throw new ClientException("keyword cannot be empty!");
     }
 
     @Override
-    public ClientDTO getClientByOrderId(String id) {
-        return null;
+    public ClientDTO getClientByOrderId(String orderId) {
+        if (orderId.isEmpty()) {
+            throw new ClientException("Order id cannot be Empty");
+        }
+
+        return clientMapper.toDTO(clientRepository.findByOrderDetailsId(orderId)
+                .orElseThrow(() -> new ClientException("No client found with that order id, ORDER ID: " + orderId)));
     }
 
     @Override
@@ -99,7 +104,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO updateClient(ClientDTO clientDTO, String id) {
+    public ClientDTO updateClientById(ClientDTO clientDTO, String id) {
         if (clientDTO == null) {
             throw new ClientException("User request cannot be null");
         }
