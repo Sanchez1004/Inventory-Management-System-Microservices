@@ -16,3 +16,4 @@ public class OrderDetailsDTO {
     private String orderStatus;
     private long orderTotal;
 }
+ 

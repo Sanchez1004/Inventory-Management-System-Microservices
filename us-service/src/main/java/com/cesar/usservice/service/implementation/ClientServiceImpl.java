@@ -68,8 +68,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO getClientById(String id) {
-        return clientMapper.toDTO(clientRepository.findById(id)
-                .orElseThrow(() -> new ClientException("User not found")));
+        return clientMapper.toDTO(clientRepository.findClientEntityById(id)
+                .orElseThrow(() -> new ClientException("User not found with id: " + id)));
     }
 
     @Override

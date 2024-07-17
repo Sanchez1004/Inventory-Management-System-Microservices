@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository extends MongoRepository<ClientEntity, String> {
-    Optional<ClientEntity> findById(String id);
+    Optional<ClientEntity> findClientEntityById(String id);
     ClientEntity findByIdAndEmailAndFirstName(String id, String email, String firstName);
 }
