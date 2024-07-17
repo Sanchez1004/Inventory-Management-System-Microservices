@@ -24,14 +24,12 @@ public class SupplierServiceImpl implements SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
     private final Map<SupplierField, BiConsumer<SupplierEntity, SupplierDTO>> updateFieldMap = new EnumMap<>(SupplierField.class);
-    private final ClientMapper clientMapper;
 
-    public SupplierServiceImpl(SupplierRepository supplierRepository, SupplierMapper supplierMapper, ClientMapper clientMapper) {
+    public SupplierServiceImpl(SupplierRepository supplierRepository, SupplierMapper supplierMapper) {
         this.supplierRepository = supplierRepository;
         this.supplierMapper = supplierMapper;
 
         initializeUpdateFieldMap();
-        this.clientMapper = clientMapper;
     }
 
     private void initializeUpdateFieldMap() {
