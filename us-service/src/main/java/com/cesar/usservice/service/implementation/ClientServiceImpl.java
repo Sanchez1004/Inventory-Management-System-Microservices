@@ -124,7 +124,7 @@ public class ClientServiceImpl implements ClientService {
             entry.getValue().accept(clientEntity, clientDTO);
         }
 
-        return clientMapper.toDTO(clientRepository.save(clientMapper.toEntity(clientDTO)));
+        return clientMapper.toDTO(clientRepository.save(clientEntity));
     }
 
     @Override

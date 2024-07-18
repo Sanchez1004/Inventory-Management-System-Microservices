@@ -134,8 +134,6 @@ Eus-service/src/main/java/com/cesar/usservice/utils/SupplierField.java,3\9\3912
 Pus-service/src/main/java/com/cesar/usservice/controller/PublicEndpointClass.java,e\f\effda747e732da244f76934ec6da7f7272747e5c
 z
 Jinv-service/src/main/java/com/cesar/invservice/entity/InventoryEntity.java,5\5\55f765674938cfdf593168c232dfbe810fa1953d
-o
-?inv-service/src/main/java/com/cesar/invservice/entity/Item.java,9\9\99f58283df05d2e6d06d28adb313c249de3785a9
 ‚
 Rinv-service/src/main/java/com/cesar/invservice/repository/InventoryRepository.java,d\0\d061d092739dae3d7fd4bc0f9eb6ba3a33de84fa
 |
@@ -152,3 +150,5 @@ r
 Binv-service/src/main/java/com/cesar/invservice/utils/Category.java,4\1\410bcfaa6525b1c88e127669057ae0ba2b2a25b4
 n
 >inv-service/src/main/java/com/cesar/invservice/utils/Item.java,2\9\2908a468bba9b0e07de9d825743345c9e2a3a679
+x
+Hinv-service/src/main/java/com/cesar/invservice/utils/InventoryField.java,b\b\bbdddfda0dc8575c4dff31bf4a609e7a19aece43

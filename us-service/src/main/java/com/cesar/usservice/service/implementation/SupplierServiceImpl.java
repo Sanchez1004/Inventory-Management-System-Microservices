@@ -96,7 +96,7 @@ public class SupplierServiceImpl implements SupplierService {
             entry.getValue().accept(supplierEntity, supplierDTO);
         }
 
-        return supplierMapper.toDTO(supplierRepository.save(supplierMapper.toEntity(supplierDTO)));
+        return supplierMapper.toDTO(supplierRepository.save(supplierEntity));
     }
 
     @Override

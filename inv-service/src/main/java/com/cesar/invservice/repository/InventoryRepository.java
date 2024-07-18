@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface InventoryRepository extends MongoRepository<InventoryEntity, String> {
+    Optional<InventoryEntity> findInventoryEntityById(String id);
     Optional<InventoryEntity> findByItemName(String name);
 }
