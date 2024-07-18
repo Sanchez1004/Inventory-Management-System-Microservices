@@ -7,11 +7,14 @@ import com.cesar.invservice.exception.InventoryException;
 import com.cesar.invservice.repository.InventoryRepository;
 import com.cesar.invservice.service.InventoryService;
 import com.cesar.invservice.utils.InventoryField;
+import com.cesar.invservice.utils.Item;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -118,22 +121,90 @@ public class InventoryServiceImpl implements InventoryService {
 
             return inventoryMapper.toDTO(inventoryRepository.save(inventoryEntity));
         }
-        logger.error("The item doesn't exist or the request has a bad format");
+        logger.error("The item with id {} doesn't exist or the request has a bad format", id);
         throw new InventoryException("There was an error updating the item");
     }
 
     @Override
     public InventoryDTO updateItemByName(InventoryDTO inventoryDTO, String name) {
-        return null;
+        if (name.isEmpty() && inventoryDTO.getItem() == null) {
+            logger.error("Item name cannot be empty and at least one item field has to be modified");
+            throw new InventoryException("Item name cannot be empty and at least one item field has to be modified");
+        }
+        InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemByName(name));
+        if (inventoryEntity != null) {
+            for (Map.Entry<InventoryField, BiConsumer<InventoryEntity, InventoryDTO>> entry : updateFieldMap.entrySet()) {
+                entry.getValue().accept(inventoryEntity, inventoryDTO);
+            }
+
+            return inventoryMapper.toDTO(inventoryRepository.save(inventoryEntity));
+        }
+        logger.error("The item with {} doesn't exist or the request has a bad format", name);
+        throw new InventoryException("There was an error updating the item");
+    }
+
+    @Override
+    public InventoryDTO addStockToItemById(String id, int quantity) {
+        if (quantity > 0) {
+            InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
+            if (inventoryEntity != null) {
+                BiConsumer<InventoryEntity, InventoryDTO> updateOrderDetails = updateFieldMap.get(InventoryField.ITEM_QUANTITY);
+                updateOrderDetails.accept(inventoryEntity, InventoryDTO.builder()
+                                .item(Item.builder().quantity(quantity).build())
+                                .build()
+                );
+                return inventoryMapper.toDTO(inventoryRepository.save(inventoryEntity));
+            }
+            logger.error("No item exists with id {}", id);
+            throw new InventoryException("No item exists with id: " + id);
+        }
+        logger.error("Quantity has to be more than zero");
+        throw new InventoryException("Quantity has to be more than zero");
+    }
+
+    @Transactional
+    @Override
+    public Map<String, Integer> deductItemsById(Map<String, Integer> itemsForDeduct) {
+        Map<String, Integer> failedItems = new LinkedHashMap<>();
+        if (!itemsForDeduct.isEmpty()) {
+            for (Map.Entry<String, Integer> entry : itemsForDeduct.entrySet()) {
+                String id = entry.getKey();
+                int quantityForDeduct = entry.getValue();
+
+                InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
+                if (inventoryEntity.getItem() != null && inventoryEntity.getItem().getQuantity() < quantityForDeduct) {
+                    failedItems.put(inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
+                }
+                if (inventoryEntity.getItem() != null && failedItems.isEmpty()) {
+                    inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() + quantityForDeduct);
+                    inventoryRepository.save(inventoryEntity);
+                }
+            }
+            if (!failedItems.isEmpty()) {
+                return failedItems;
+            }
+            return null;
+        }
+        logger.error("There are no items for process");
+        throw new InventoryException("There are no items for process");
     }
 
     @Override
     public String deleteItemById(String id) {
-        return "";
+        InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
+        if (inventoryEntity != null) {
+            inventoryRepository.delete(inventoryEntity);
+            return "Item deleted successfully with id: " + id;
+        }
+        return "There was an error deleting the item with id: - " + id + " -, check if there exist an item with that id!";
     }
 
     @Override
     public String deleteItemByName(String name) {
-        return "";
-    }
+        InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemByName(name));
+        if (inventoryEntity != null) {
+            inventoryRepository.delete(inventoryEntity);
+            return "Item deleted successfully with name: " + name;
+        }
+        return "There was an error deleting the item with name: - " + name + " -, check if there exist an item with that name!";    }
 }
