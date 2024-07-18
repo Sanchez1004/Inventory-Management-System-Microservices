@@ -3,7 +3,7 @@ package com.cesar.usservice.service.implementation;
 import com.cesar.usservice.dto.ClientDTO;
 import com.cesar.usservice.dto.mapper.ClientMapper;
 import com.cesar.usservice.entity.ClientEntity;
-import com.cesar.usservice.dto.OrderDetails;
+import com.cesar.usservice.utils.OrderDetails;
 import com.cesar.usservice.repository.ClientRepository;
 import com.cesar.usservice.service.ClientService;
 import com.cesar.usservice.exception.ClientException;

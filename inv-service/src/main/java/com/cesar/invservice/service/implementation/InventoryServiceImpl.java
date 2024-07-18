@@ -143,6 +143,7 @@ public class InventoryServiceImpl implements InventoryService {
         throw new InventoryException("There was an error updating the item");
     }
 
+    @Transactional
     @Override
     public InventoryDTO addStockToItemById(String id, int quantity) {
         if (quantity > 0) {

@@ -1,7 +1,7 @@
 package com.cesar.usservice.service;
 
 import com.cesar.usservice.dto.ClientDTO;
-import com.cesar.usservice.dto.OrderDetails;
+import com.cesar.usservice.utils.OrderDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

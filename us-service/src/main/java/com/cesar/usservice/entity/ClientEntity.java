@@ -1,6 +1,6 @@
 package com.cesar.usservice.entity;
 
-import com.cesar.usservice.dto.OrderDetails;
+import com.cesar.usservice.utils.OrderDetails;
 import com.cesar.usservice.utils.Address;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

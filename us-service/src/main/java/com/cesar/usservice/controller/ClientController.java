@@ -1,7 +1,7 @@
 package com.cesar.usservice.controller;
 
 import com.cesar.usservice.dto.ClientDTO;
-import com.cesar.usservice.dto.OrderDetails;
+import com.cesar.usservice.utils.OrderDetails;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.service.ClientService;
 import lombok.RequiredArgsConstructor;

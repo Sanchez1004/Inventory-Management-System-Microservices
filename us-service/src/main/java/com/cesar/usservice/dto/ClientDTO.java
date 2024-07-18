@@ -2,6 +2,7 @@ package com.cesar.usservice.dto;
 
 import com.cesar.usservice.utils.Address;
 
+import com.cesar.usservice.utils.OrderDetails;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
