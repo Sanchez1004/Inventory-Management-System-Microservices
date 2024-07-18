@@ -148,3 +148,5 @@ x
 Hinv-service/src/main/java/com/cesar/invservice/utils/InventoryField.java,b\b\bbdddfda0dc8575c4dff31bf4a609e7a19aece43
 ‚
 Rinv-service/src/main/java/com/cesar/invservice/controller/InventoryController.java,e\6\e61b45a0bafda0c07df6f74d314dd4644725620e
+t
+Dord-service/src/main/java/com/cesar/ordservice/dto/InventoryDTO.java,5\4\54c31da7ced642fc5f0ec6b34a8ee51a513c0aa6

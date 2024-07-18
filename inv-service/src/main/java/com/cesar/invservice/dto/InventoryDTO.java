@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Setter
 @Getter
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryDTO {
-    @MongoId
     private String id;
     private Item item;
     private double salePrice;
