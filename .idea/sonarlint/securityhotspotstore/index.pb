@@ -152,3 +152,5 @@ n
 >inv-service/src/main/java/com/cesar/invservice/utils/Item.java,2\9\2908a468bba9b0e07de9d825743345c9e2a3a679
 x
 Hinv-service/src/main/java/com/cesar/invservice/utils/InventoryField.java,b\b\bbdddfda0dc8575c4dff31bf4a609e7a19aece43
+‚
+Rinv-service/src/main/java/com/cesar/invservice/controller/InventoryController.java,e\6\e61b45a0bafda0c07df6f74d314dd4644725620e
