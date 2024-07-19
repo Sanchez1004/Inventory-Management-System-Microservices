@@ -14,5 +14,5 @@ import lombok.Setter;
 public class OrderDetails {
     private String id;
     private String orderStatus;
-    private long orderTotal;
+    private double orderTotal;
 }
