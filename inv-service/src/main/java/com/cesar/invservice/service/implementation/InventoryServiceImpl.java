@@ -167,10 +167,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Map<String, Integer> deductItemsById(Map<String, Integer> itemsForDeduct) {
         Map<String, Integer> failedItems = new LinkedHashMap<>();
+        Map<String, Integer> deductedItems = new LinkedHashMap<>();
         if (!itemsForDeduct.isEmpty()) {
             for (Map.Entry<String, Integer> entry : itemsForDeduct.entrySet()) {
                 String id = entry.getKey();
-                int quantityForDeduct = entry.getValue();
+                Integer quantityForDeduct = entry.getValue();
 
                 InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
                 if (inventoryEntity.getItem() != null && inventoryEntity.getItem().getQuantity() < quantityForDeduct) {
@@ -179,15 +180,32 @@ public class InventoryServiceImpl implements InventoryService {
                 if (inventoryEntity.getItem() != null && failedItems.isEmpty()) {
                     inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() + quantityForDeduct);
                     inventoryRepository.save(inventoryEntity);
+                    deductedItems.put(id, quantityForDeduct);
                 }
             }
             if (!failedItems.isEmpty()) {
                 return failedItems;
+            } else {
+                return deductedItems;
             }
-            return null;
         }
         logger.error("There are no items for process");
         throw new InventoryException("There are no items for process");
+    }
+
+    @Override
+    public Double getItemListTotal(Map<String, Integer> itemList) {
+        double total = 0.0;
+
+        for (Map.Entry<String, Integer> entry : itemList.entrySet()) {
+            String id = entry.getKey();
+            Integer itemQuantity = entry.getValue();
+            InventoryEntity item = inventoryMapper.toEntity(getItemById(id));
+
+            total += item.getSalePrice() * itemQuantity;
+        }
+
+        return total;
     }
 
     @Override

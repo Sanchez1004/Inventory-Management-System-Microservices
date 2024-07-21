@@ -13,6 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderDetails {
     private String id;
-    private String orderStatus;
+    private OrderStatus orderStatus;
     private double orderTotal;
 }

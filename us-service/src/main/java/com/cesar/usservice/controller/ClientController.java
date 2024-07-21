@@ -4,6 +4,7 @@ import com.cesar.usservice.dto.ClientDTO;
 import com.cesar.usservice.utils.OrderDetails;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.service.ClientService;
+import com.cesar.usservice.utils.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,15 @@ import java.util.List;
 public class ClientController {
 
     private final ClientService clientService;
+
+    @GetMapping("/get-client-by-id")
+    ResponseEntity<ClientDTO> getClientById(@RequestParam String id) {
+        try {
+            return ResponseEntity.ok(clientService.getClientById(id));
+        } catch (ClientException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 
     @GetMapping("/get-client")
     ResponseEntity<List<ClientDTO>> findClientByKeyword(@RequestParam String keyword) {
@@ -82,7 +92,7 @@ public class ClientController {
     }
 
     @PutMapping("/update-client-order-status-by-client-id")
-    ResponseEntity<ClientDTO> updateClientOrderStatusById(@RequestParam String orderId, @RequestParam String newOrderStatus, @RequestParam String clientId) {
+    ResponseEntity<ClientDTO> updateClientOrderStatusById(@RequestParam String orderId, @RequestParam OrderStatus newOrderStatus, @RequestParam String clientId) {
         try {
             return ResponseEntity.ok(clientService.updateClientOrderStatusByClientId(orderId, newOrderStatus, clientId));
         } catch (ClientException e) {

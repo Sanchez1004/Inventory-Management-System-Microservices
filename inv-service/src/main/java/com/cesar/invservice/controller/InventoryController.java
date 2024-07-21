@@ -52,6 +52,15 @@ public class InventoryController {
         }
     }
 
+    @GetMapping("/get-item-list-total")
+    ResponseEntity<Double> getItemListTotal(@RequestParam Map<String, Integer> itemList) {
+        try {
+            return ResponseEntity.ok(inventoryService.getItemListTotal(itemList));
+        } catch (InventoryException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/create-item")
     ResponseEntity<InventoryDTO> addItem(InventoryDTO inventoryDTO) {
         try {

@@ -8,6 +8,7 @@ import com.cesar.usservice.repository.ClientRepository;
 import com.cesar.usservice.service.ClientService;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.utils.ClientField;
+import com.cesar.usservice.utils.OrderStatus;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
@@ -145,7 +146,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO updateClientOrderStatusByClientId(String orderId, String newOrderStatus, String clientId) {
+    public ClientDTO updateClientOrderStatusByClientId(String orderId, OrderStatus newOrderStatus, String clientId) {
         ClientEntity clientEntity = clientMapper.toEntity(getClientById(clientId));
 
         List<OrderDetails> orderDetailsList = clientEntity.getPendingOrders();

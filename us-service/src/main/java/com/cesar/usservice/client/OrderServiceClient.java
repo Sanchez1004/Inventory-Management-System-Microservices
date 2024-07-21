@@ -2,6 +2,6 @@ package com.cesar.usservice.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 
-@FeignClient(name = "order-service")
+@FeignClient(name = "ord-service")
 public interface OrderServiceClient {
 }

@@ -14,6 +14,7 @@ public interface InventoryService {
     InventoryDTO updateItemByName(InventoryDTO inventoryDTO, String name);
     InventoryDTO addStockToItemById(String id, int quantity);
     Map<String, Integer> deductItemsById(Map<String, Integer> itemsForDeduct);
+    Double getItemListTotal(Map<String, Integer>itemList);
     String deleteItemById(String id);
     String deleteItemByName(String name);
 }
