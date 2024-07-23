@@ -24,7 +24,8 @@ public class OrderDTO {
     private String id;
     private OrderStatus orderStatus;
     private String clientId;
-    private String clientName;
+    private String clientFirstName;
+    private String clientLastName;
     private String clientMail;
     private Map<String, Integer> itemList;
     private double orderTotal;

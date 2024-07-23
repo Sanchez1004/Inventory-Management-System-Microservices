@@ -59,7 +59,7 @@ public class InventoryServiceImpl implements InventoryService {
         });
         updateFieldMap.put(InventoryField.ITEM_QUANTITY, (entity, request) -> {
             if (request.getItem().getQuantity() >= 0) {
-                entity.getItem().setQuantity(request.getItem().getQuantity());
+                entity.getItem().setQuantity(entity.getItem().getQuantity() + request.getItem().getQuantity());
             }
         });
         updateFieldMap.put(InventoryField.SALE_PRICE, (entity, request) -> {
@@ -145,16 +145,17 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     @Override
-    public InventoryDTO addStockToItemById(String id, int quantity) {
+    public Boolean addStockToItemById(String id, int quantity) {
         if (quantity > 0) {
             InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
             if (inventoryEntity != null) {
-                BiConsumer<InventoryEntity, InventoryDTO> updateOrderDetails = updateFieldMap.get(InventoryField.ITEM_QUANTITY);
-                updateOrderDetails.accept(inventoryEntity, InventoryDTO.builder()
+                BiConsumer<InventoryEntity, InventoryDTO> updateItemDetails = updateFieldMap.get(InventoryField.ITEM_QUANTITY);
+                updateItemDetails.accept(inventoryEntity, InventoryDTO.builder()
                                 .item(Item.builder().quantity(quantity).build())
                                 .build()
                 );
-                return inventoryMapper.toDTO(inventoryRepository.save(inventoryEntity));
+                inventoryRepository.save(inventoryEntity);
+                return true;
             }
             logger.error("No item exists with id {}", id);
             throw new InventoryException("No item exists with id: " + id);
@@ -175,7 +176,7 @@ public class InventoryServiceImpl implements InventoryService {
 
                 InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
                 if (inventoryEntity.getItem() != null && inventoryEntity.getItem().getQuantity() < quantityForDeduct) {
-                    failedItems.put(inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
+                    failedItems.put(inventoryEntity.getId() + " - " + inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
                 }
                 if (inventoryEntity.getItem() != null && failedItems.isEmpty()) {
                     inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() + quantityForDeduct);
@@ -184,13 +185,26 @@ public class InventoryServiceImpl implements InventoryService {
                 }
             }
             if (!failedItems.isEmpty()) {
-                return failedItems;
+                return failedItems; // This has to be handle in frontend to be used as the item name and quantity that really are
             } else {
                 return deductedItems;
             }
         }
         logger.error("There are no items for process");
         throw new InventoryException("There are no items for process");
+    }
+
+    @Transactional
+    @Override
+    public Boolean deductItemById(String itemId, Integer quantityForDeduct) {
+        InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(itemId));
+        if (inventoryEntity != null && inventoryEntity.getItem().getQuantity() >= quantityForDeduct) {
+            inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() - quantityForDeduct);
+            inventoryRepository.save(inventoryEntity);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

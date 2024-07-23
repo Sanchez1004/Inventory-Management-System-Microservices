@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,7 +63,7 @@ public class InventoryController {
     }
 
     @PostMapping("/create-item")
-    ResponseEntity<InventoryDTO> addItem(InventoryDTO inventoryDTO) {
+    ResponseEntity<InventoryDTO> addItem(@RequestBody InventoryDTO inventoryDTO) {
         try {
             return ResponseEntity.ok(inventoryService.addItem(inventoryDTO));
         } catch (InventoryException e) {
@@ -71,7 +72,7 @@ public class InventoryController {
     }
 
     @PutMapping("/update-item-by-id")
-    ResponseEntity<InventoryDTO> updateItemById(InventoryDTO inventoryDTO, String id) {
+    ResponseEntity<InventoryDTO> updateItemById(@RequestBody InventoryDTO inventoryDTO,@RequestParam String id) {
         try {
             return ResponseEntity.ok(inventoryService.updateItemById(inventoryDTO, id));
         } catch (InventoryException e) {
@@ -80,7 +81,7 @@ public class InventoryController {
     }
 
     @PutMapping("/update-item-by-name")
-    ResponseEntity<InventoryDTO> updateItemByName(InventoryDTO inventoryDTO, String name) {
+    ResponseEntity<InventoryDTO> updateItemByName(@RequestBody InventoryDTO inventoryDTO, @RequestParam String name) {
         try {
             return ResponseEntity.ok(inventoryService.updateItemByName(inventoryDTO, name));
         } catch (InventoryException e) {
@@ -89,7 +90,7 @@ public class InventoryController {
     }
 
     @PutMapping("/add-stock-by-id")
-    ResponseEntity<InventoryDTO> addStockToItem(String id, int quantity) {
+    ResponseEntity<Boolean> addStockToItem(@RequestParam String id, @RequestParam int quantity) {
         try {
             return ResponseEntity.ok(inventoryService.addStockToItemById(id, quantity));
         } catch (InventoryException e) {
@@ -98,9 +99,18 @@ public class InventoryController {
     }
 
     @PutMapping("/deduct-items-by-id")
-    ResponseEntity<Map<String, Integer>> deductItemsById(Map<String, Integer> itemsForDeduct) {
+    ResponseEntity<Map<String, Integer>> deductItemsById(@RequestBody Map<String, Integer> itemsForDeduct) {
         try {
             return ResponseEntity.ok(inventoryService.deductItemsById(itemsForDeduct));
+        } catch (InventoryException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/deduct-item-by-id")
+    ResponseEntity<Boolean> deductItemById(@RequestParam String itemId, @RequestParam Integer quantityForDeduct) {
+        try {
+            return ResponseEntity.ok(inventoryService.deductItemById(itemId, quantityForDeduct));
         } catch (InventoryException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
