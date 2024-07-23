@@ -1,6 +1,6 @@
 package com.cesar.usservice.entity;
 
-import com.cesar.usservice.utils.OrderDetails;
+import com.cesar.usservice.dto.OrderDetailsDTO;
 import com.cesar.usservice.utils.Address;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -25,5 +25,5 @@ public class ClientEntity {
     private String lastName;
     private String email;
     private Address address;
-    private List<OrderDetails> pendingOrders;
+    private List<OrderDetailsDTO> pendingOrders;
 }

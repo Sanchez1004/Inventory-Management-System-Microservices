@@ -3,7 +3,7 @@ package com.cesar.usservice.service.implementation;
 import com.cesar.usservice.dto.ClientDTO;
 import com.cesar.usservice.dto.mapper.ClientMapper;
 import com.cesar.usservice.entity.ClientEntity;
-import com.cesar.usservice.utils.OrderDetails;
+import com.cesar.usservice.dto.OrderDetailsDTO;
 import com.cesar.usservice.repository.ClientRepository;
 import com.cesar.usservice.service.ClientService;
 import com.cesar.usservice.exception.ClientException;
@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -62,14 +63,36 @@ public class ClientServiceImpl implements ClientService {
             }
         });
         updateFieldMap.put(ClientField.ORDER_DETAILS, (entity, request) -> {
-            if (request.getPendingOrders() != null) {
-                if (entity.getPendingOrders().isEmpty()) {
-                    entity.setPendingOrders(request.getPendingOrders());
-                }
-                entity.getPendingOrders().addAll(request.getPendingOrders());
+            List<OrderDetailsDTO> orderList = entity.getPendingOrders();
+            OrderDetailsDTO newOrderDetails = request.getPendingOrders().getFirst();
+
+            if (orderList == null) {
+                orderList = new ArrayList<>();
+                orderList.add(newOrderDetails);
+                entity.setPendingOrders(orderList);
+                return;
+            }
+
+            if (orderExist(orderList, newOrderDetails)) {
+                entity.setPendingOrders(orderList);
+            }
+            else {
+                orderList.add(newOrderDetails);
+                entity.setPendingOrders(orderList);
             }
         });
     }
+
+    private boolean orderExist(List<OrderDetailsDTO> orderList, OrderDetailsDTO newOrderDetails) {
+        for (OrderDetailsDTO order : orderList) {
+            if (order.getId().equals(newOrderDetails.getId())) {
+                orderList.set(orderList.indexOf(order), newOrderDetails);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public ClientDTO getClientById(String id) {
@@ -129,14 +152,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO updateClientOrdersByClientId(OrderDetails orderDetails, String id) {
-        if (orderDetails == null) {
+    public ClientDTO updateClientOrdersByClientId(OrderDetailsDTO orderDetailsDTO, String id) {
+        if (orderDetailsDTO == null) {
             logger.error("User details cannot be null, every field must be full");
             throw new ClientException("The order details cannot be empty");
         }
         ClientEntity clientEntity = clientMapper.toEntity(getClientById(id));
         ClientDTO clientDTO = ClientDTO.builder()
-                .pendingOrders(List.of(orderDetails))
+                .pendingOrders(List.of(orderDetailsDTO))
                 .build();
 
         BiConsumer<ClientEntity, ClientDTO> updateOrderDetails = updateFieldMap.get(ClientField.ORDER_DETAILS);
@@ -149,10 +172,10 @@ public class ClientServiceImpl implements ClientService {
     public ClientDTO updateClientOrderStatusByClientId(String orderId, OrderStatus newOrderStatus, String clientId) {
         ClientEntity clientEntity = clientMapper.toEntity(getClientById(clientId));
 
-        List<OrderDetails> orderDetailsList = clientEntity.getPendingOrders();
-        for (OrderDetails orderDetails : orderDetailsList) {
-            if (Objects.equals(orderDetails.getId(), orderId)) {
-                orderDetails.setOrderStatus(newOrderStatus);
+        List<OrderDetailsDTO> orderDetailsDTOList = clientEntity.getPendingOrders();
+        for (OrderDetailsDTO orderDetailsDTO : orderDetailsDTOList) {
+            if (Objects.equals(orderDetailsDTO.getId(), orderId)) {
+                orderDetailsDTO.setOrderStatus(newOrderStatus);
                 break;
             }
         }

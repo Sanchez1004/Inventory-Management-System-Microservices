@@ -186,3 +186,7 @@ s
 Cus-service/src/main/java/com/cesar/usservice/utils/OrderStatus.java,e\b\ebe519a1b28c8f282bc66ebf39738bb37e920994
 ~
 Ninv-service/src/main/java/com/cesar/invservice/dto/mapper/InventoryMapper.java,1\3\13d3aba634c37bcbcba9e4987076c9cb9cfc017a
+w
+Gus-service/src/main/java/com/cesar/usservice/utils/OrderDetailsDTO.java,5\2\52a12558808a56c9d261ba85dd00873e329a729d
+u
+Eus-service/src/main/java/com/cesar/usservice/dto/OrderDetailsDTO.java,b\a\ba0651c8becdedf4bc24df71798f3ea66dc30478

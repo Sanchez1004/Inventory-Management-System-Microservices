@@ -1,7 +1,7 @@
 package com.cesar.usservice.controller;
 
 import com.cesar.usservice.dto.ClientDTO;
-import com.cesar.usservice.utils.OrderDetails;
+import com.cesar.usservice.dto.OrderDetailsDTO;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.service.ClientService;
 import com.cesar.usservice.utils.OrderStatus;
@@ -83,9 +83,9 @@ public class ClientController {
     }
 
     @PutMapping("/update-client-orders-by-id")
-    ResponseEntity<ClientDTO> updateClientOrdersById(@RequestBody OrderDetails orderDetails, @RequestParam String clientId) {
+    ResponseEntity<ClientDTO> updateClientOrdersById(@RequestBody OrderDetailsDTO orderDetailsDTO, @RequestParam String clientId) {
         try {
-            return ResponseEntity.ok(clientService.updateClientOrdersByClientId(orderDetails, clientId));
+            return ResponseEntity.ok(clientService.updateClientOrdersByClientId(orderDetailsDTO, clientId));
         } catch (ClientException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }

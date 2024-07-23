@@ -1,5 +1,6 @@
-package com.cesar.usservice.utils;
+package com.cesar.usservice.dto;
 
+import com.cesar.usservice.utils.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetails {
+public class OrderDetailsDTO {
     private String id;
     private OrderStatus orderStatus;
     private double orderTotal;

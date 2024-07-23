@@ -2,7 +2,6 @@ package com.cesar.usservice.dto;
 
 import com.cesar.usservice.utils.Address;
 
-import com.cesar.usservice.utils.OrderDetails;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
@@ -22,5 +21,5 @@ public class ClientDTO {
     private String lastName;
     private String email;
     private Address address;
-    private List<OrderDetails> pendingOrders;
+    private List<OrderDetailsDTO> pendingOrders;
 }
