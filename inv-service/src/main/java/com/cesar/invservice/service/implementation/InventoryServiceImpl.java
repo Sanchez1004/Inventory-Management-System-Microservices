@@ -1,7 +1,7 @@
 package com.cesar.invservice.service.implementation;
 
 import com.cesar.invservice.dto.InventoryDTO;
-import com.cesar.invservice.dto.InventoryMapper;
+import com.cesar.invservice.dto.mapper.InventoryMapper;
 import com.cesar.invservice.entity.InventoryEntity;
 import com.cesar.invservice.exception.InventoryException;
 import com.cesar.invservice.repository.InventoryRepository;

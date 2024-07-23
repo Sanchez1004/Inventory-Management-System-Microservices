@@ -9,7 +9,7 @@ public class ClientMapper {
     public ClientEntity toEntity(ClientDTO clientDTO) {
         return ClientEntity.builder()
                 .id(clientDTO.getId())
-                .firstName(clientDTO.getLastName())
+                .firstName(clientDTO.getFirstName())
                 .lastName(clientDTO.getLastName())
                 .address(clientDTO.getAddress())
                 .email(clientDTO.getEmail())
@@ -20,7 +20,7 @@ public class ClientMapper {
     public ClientDTO toDTO(ClientEntity clientEntity) {
         return ClientDTO.builder()
                 .id(clientEntity.getId())
-                .firstName(clientEntity.getLastName())
+                .firstName(clientEntity.getFirstName())
                 .lastName(clientEntity.getLastName())
                 .address(clientEntity.getAddress())
                 .email(clientEntity.getEmail())

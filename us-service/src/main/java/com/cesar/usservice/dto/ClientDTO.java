@@ -23,5 +23,4 @@ public class ClientDTO {
     private String email;
     private Address address;
     private List<OrderDetails> pendingOrders;
-
 }

@@ -24,8 +24,6 @@ Mapi-gateway/src/main/java/com/cesar/gatewayservice/ApiGatewayApplication.java,
 Oconfig-server/src/main/java/com/cesar/configserver/ConfigServerApplication.java,7\5\75d2fbec8a8da980c44872c3c47fcc3d6e3f8084
 E
 config-server/pom.xml,a\2\a2f9618c8ad821b143a07a29a9805fcb0b2df470
-n
->config-server/src/main/resources/configuration/inv-service.yml,6\e\6eabb0e6cbb050de3a33b6d24d8369d57eb3bfc5
 D
 auth-service/pom.xml,7\f\7f617cadbbc161fc020296c3a971388d61795426
 {
@@ -134,8 +132,6 @@ Linv-service/src/main/java/com/cesar/invservice/service/InventoryService.java,3
 _inv-service/src/main/java/com/cesar/invservice/service/implementation/InventoryServiceImpl.java,f\5\f54270288b8967306510580d68abbe2ed67864cf
 t
 Dinv-service/src/main/java/com/cesar/invservice/dto/InventoryDTO.java,a\c\ac762a167c1d6e04200a17548b5b30937af19a0f
-w
-Ginv-service/src/main/java/com/cesar/invservice/dto/InventoryMapper.java,4\d\4df5a2ac8ab2ff5daea12900e971a4f401c13e65
 €
 Pinv-service/src/main/java/com/cesar/invservice/exception/InventoryException.java,2\6\26533e27ab1493471d478e832f8202c0ce757968
 r
@@ -182,3 +178,5 @@ u
 Eord-service/src/main/java/com/cesar/ordservice/utils/OrderStatus.java,6\8\68f98a5b01b3a0d91b79bcf41a9d07ffd9a994ef
 s
 Cus-service/src/main/java/com/cesar/usservice/utils/OrderStatus.java,e\b\ebe519a1b28c8f282bc66ebf39738bb37e920994
+~
+Ninv-service/src/main/java/com/cesar/invservice/dto/mapper/InventoryMapper.java,1\3\13d3aba634c37bcbcba9e4987076c9cb9cfc017a

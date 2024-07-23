@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: svc-inventory
+    name: inv-service
   data:
     mongodb:
       uri: ${MONGOURI}

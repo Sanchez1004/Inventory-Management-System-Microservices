@@ -1,10 +1,10 @@
-package com.cesar.invservice.dto;
+package com.cesar.invservice.dto.mapper;
 
+import com.cesar.invservice.dto.InventoryDTO;
 import com.cesar.invservice.entity.InventoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Component
 public class InventoryMapper {
     public InventoryDTO toDTO(InventoryEntity inventoryEntity) {
