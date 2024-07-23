@@ -1,0 +1,15 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: svc-inventory
+  data:
+    mongodb:
+      uri: ${MONGOURI}
+
+eureka:
+  client:
+    enabled: false
+  instance:
+    enabled: false

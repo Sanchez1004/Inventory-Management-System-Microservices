@@ -1,0 +1,15 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: ord-service
+  data:
+    mongodb:
+      uri: ${MONGOURI_ORDERS}
+
+eureka:
+  client:
+    enabled: false
+  instance:
+    enabled: false
