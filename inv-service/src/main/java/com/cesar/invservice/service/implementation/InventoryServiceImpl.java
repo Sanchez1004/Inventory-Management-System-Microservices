@@ -17,6 +17,7 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Service
@@ -38,12 +39,12 @@ public class InventoryServiceImpl implements InventoryService {
 
     private void initializeUpdateFieldMap() {
         updateFieldMap.put(InventoryField.ITEM_NAME, (entity, request) -> {
-            if (!request.getItem().getName().isEmpty()) {
+            if (request.getItem().getName() != null && !request.getItem().getName().isEmpty()) {
                 entity.getItem().setName(request.getItem().getName());
             }
         });
         updateFieldMap.put(InventoryField.ITEM_DESCRIPTION, (entity, request) -> {
-            if (!request.getItem().getDescription().isEmpty()) {
+            if (request.getItem().getDescription() != null && !request.getItem().getDescription().isEmpty()) {
                 entity.getItem().setDescription(request.getItem().getDescription());
             }
         });
@@ -95,16 +96,21 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public InventoryDTO addItem(InventoryDTO inventoryDTO) {
-        if (inventoryDTO.getItem().getName() != null && inventoryDTO.getItem().getPrice() >= 0 && inventoryDTO.getItem().getQuantity() >= 0) {
-            InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemByName(inventoryDTO.getItem().getName()));
-            if (inventoryEntity == null) {
+        if (!inventoryDTO.getItem().getName().isEmpty() && inventoryDTO.getItem().getPrice() >= 0 && inventoryDTO.getItem().getQuantity() >= 0) {
+            if (isItemAlreadyCreated(inventoryDTO.getItem().getName())) {
+                logger.info("Item already exists with name: {}", inventoryDTO.getItem().getName());
+                throw new InventoryException("Item already exists with name: " + inventoryDTO.getItem().getName());
+            } else {
                 return inventoryMapper.toDTO(inventoryRepository.save(inventoryMapper.toEntity(inventoryDTO)));
             }
-            logger.info("Item already exists with name: {}", inventoryDTO.getItem().getName());
-            throw new InventoryException("Item already exists with name: " + inventoryDTO.getItem().getName());
         }
-        logger.error("Fill item name field!");
-        throw new InventoryException("Fill basic item field: name");
+        logger.error("Fill item name field & negative numbers are not allowed");
+        throw new InventoryException("Fill basic item field: name & negative numbers are not allowed");
+    }
+
+    private boolean isItemAlreadyCreated(String name) {
+        Optional<InventoryEntity> inventoryEntity = inventoryRepository.findByItemName(name);
+        return inventoryEntity.isPresent();
     }
 
     @Override
@@ -173,16 +179,7 @@ public class InventoryServiceImpl implements InventoryService {
             for (Map.Entry<String, Integer> entry : itemsForDeduct.entrySet()) {
                 String id = entry.getKey();
                 Integer quantityForDeduct = entry.getValue();
-
-                InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
-                if (inventoryEntity.getItem() != null && inventoryEntity.getItem().getQuantity() < quantityForDeduct) {
-                    failedItems.put(inventoryEntity.getId() + " - " + inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
-                }
-                if (inventoryEntity.getItem() != null && failedItems.isEmpty()) {
-                    inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() + quantityForDeduct);
-                    inventoryRepository.save(inventoryEntity);
-                    deductedItems.put(id, quantityForDeduct);
-                }
+                deductItems(id, quantityForDeduct, failedItems, deductedItems);
             }
             if (!failedItems.isEmpty()) {
                 return failedItems; // This has to be handle in frontend to be used as the item name and quantity that really are
@@ -192,6 +189,23 @@ public class InventoryServiceImpl implements InventoryService {
         }
         logger.error("There are no items for process");
         throw new InventoryException("There are no items for process");
+    }
+
+    private void deductItems(String id, Integer quantityForDeduct, Map<String, Integer> failedItems, Map<String, Integer> deductedItems) {
+        InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
+        if (quantityForDeduct > 0) {
+            if (inventoryEntity.getItem() != null && inventoryEntity.getItem().getQuantity() < quantityForDeduct) {
+                failedItems.put(inventoryEntity.getId() + " - " + inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
+            }
+            if (inventoryEntity.getItem() != null && failedItems.isEmpty()) {
+                inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() - quantityForDeduct);
+                inventoryRepository.save(inventoryEntity);
+                deductedItems.put(id, quantityForDeduct);
+            }
+        }
+        else {
+            failedItems.put(inventoryEntity.getId() + " - " + inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
+        }
     }
 
     @Transactional
@@ -227,7 +241,7 @@ public class InventoryServiceImpl implements InventoryService {
         InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
         if (inventoryEntity != null) {
             inventoryRepository.delete(inventoryEntity);
-            return "Item deleted successfully with id: " + id;
+            return "Item deleted successfully with id: " + id + " and name: " + inventoryEntity.getItem().getName();
         }
         return "There was an error deleting the item with id: - " + id + " -, check if there exist an item with that id!";
     }
@@ -237,7 +251,7 @@ public class InventoryServiceImpl implements InventoryService {
         InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemByName(name));
         if (inventoryEntity != null) {
             inventoryRepository.delete(inventoryEntity);
-            return "Item deleted successfully with name: " + name;
+            return "Item deleted successfully with name: " + name + " and id: " + inventoryEntity.getId();
         }
         return "There was an error deleting the item with name: - " + name + " -, check if there exist an item with that name!";    }
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class InventoryMapper {
     public InventoryDTO toDTO(InventoryEntity inventoryEntity) {
         return InventoryDTO.builder()
+                .id(inventoryEntity.getId())
                 .item(inventoryEntity.getItem())
                 .salePrice(inventoryEntity.getSalePrice())
                 .build();
@@ -23,6 +24,7 @@ public class InventoryMapper {
 
     public InventoryEntity toEntity(InventoryDTO inventoryDTO) {
         return InventoryEntity.builder()
+                .id(inventoryDTO.getId())
                 .item(inventoryDTO.getItem())
                 .salePrice(inventoryDTO.getSalePrice())
                 .build();

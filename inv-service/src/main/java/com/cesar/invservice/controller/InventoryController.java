@@ -54,7 +54,7 @@ public class InventoryController {
     }
 
     @GetMapping("/get-item-list-total")
-    ResponseEntity<Double> getItemListTotal(@RequestParam Map<String, Integer> itemList) {
+    ResponseEntity<Double> getItemListTotal(@RequestBody Map<String, Integer> itemList) {
         try {
             return ResponseEntity.ok(inventoryService.getItemListTotal(itemList));
         } catch (InventoryException e) {
@@ -117,7 +117,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/delete-item-by-id")
-    ResponseEntity<String> deleteItemById(String id) {
+    ResponseEntity<String> deleteItemById(@RequestParam String id) {
         try {
             return ResponseEntity.ok(inventoryService.deleteItemById(id));
         } catch (InventoryException e) {
@@ -126,7 +126,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/delete-item-by-name")
-    ResponseEntity<String> deleteItemByName(String name) {
+    ResponseEntity<String> deleteItemByName(@RequestParam String name) {
         try {
             return ResponseEntity.ok(inventoryService.deleteItemByName(name));
         } catch (InventoryException e) {

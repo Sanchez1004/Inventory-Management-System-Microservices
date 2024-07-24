@@ -21,7 +21,7 @@ public interface InventoryServiceClient {
     ResponseEntity<Map<String, Integer>> deductItemsById(@RequestBody Map<String, Integer> itemsForDeduct);
 
     @GetMapping("/api/inventories/get-item-list-total")
-    ResponseEntity<Double> getItemListTotal(@RequestParam Map<String, Integer> itemList);
+    ResponseEntity<Double> getItemListTotal(@RequestBody Map<String, Integer> itemList);
 
     @PutMapping("/api/inventories/add-stock-by-id")
     ResponseEntity<Boolean> addStockToItem(@RequestParam String id, @RequestParam int quantity);

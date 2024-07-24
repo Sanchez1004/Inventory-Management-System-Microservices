@@ -11,12 +11,12 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Document(collection = "inventory")
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "inventory")
 public class InventoryEntity {
     @MongoId
     private String id;

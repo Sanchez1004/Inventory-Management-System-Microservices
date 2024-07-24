@@ -9,9 +9,9 @@ import com.cesar.usservice.service.ClientService;
 import com.cesar.usservice.exception.ClientException;
 import com.cesar.usservice.utils.ClientField;
 import com.cesar.usservice.utils.OrderStatus;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    private static final Logger logger = LogManager.getLogger(ClientServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
 
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
@@ -187,9 +187,9 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity clientEntity = clientMapper.toEntity(getClientById(id));
         if (clientEntity != null) {
             clientRepository.delete(clientEntity);
-            return "Client with id: " + id + " was successfully deleted";
+            return "Client with id: '" + id + "' was successfully deleted";
         }
         logger.info("Client with id: {} not found", id);
-        throw new ClientException("Client with id: " + id + " not found");
+        return "Client with id: '" + id + " not found";
     }
 }

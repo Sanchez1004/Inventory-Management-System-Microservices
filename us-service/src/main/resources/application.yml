@@ -5,3 +5,9 @@ spring:
     name: us-service
   config:
     import: optional:configserver:http://localhost:8888
+
+logging:
+  level:
+    root: debug
+    org.springframework.web: debug
+    com.cesar.usservice: debug
