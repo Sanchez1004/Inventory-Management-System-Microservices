@@ -195,4 +195,22 @@ public class ClientServiceImpl implements ClientService {
         logger.info("Client with id: {} not found", id);
         return "Client with id: '" + id + " not found";
     }
+
+    @Override
+    public String deleteOrderDetailsById(String clientId, String orderId) {
+        ClientEntity clientEntity = clientRepository.findClientEntityById(clientId).orElse(null);
+
+        if (clientEntity == null) {
+            return "User not found";
+        }
+
+        List<OrderDetailsDTO> orderDetailsList = clientEntity.getPendingOrders();
+        if (orderDetailsList.removeIf(orderDetailsDTO -> Objects.equals(orderDetailsDTO.getId(), orderId))) {
+            clientEntity.setPendingOrders(orderDetailsList);
+            clientRepository.save(clientEntity);
+            return "Order with id: '" + orderId + "' was successfully deleted";
+        }
+
+        return "Order with id: '" + orderId + "' not found";
+    }
 }

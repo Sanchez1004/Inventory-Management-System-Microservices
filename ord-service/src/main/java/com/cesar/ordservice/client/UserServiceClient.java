@@ -29,4 +29,7 @@ public interface UserServiceClient {
 
     @DeleteMapping("/api/users/clients/delete-client-order-by-id")
     ResponseEntity<Void> deleteClientOrderByOrderId(@RequestParam String clientId, @RequestParam String orderId);
+
+    @PutMapping("/api/users/clients/delete-order-by-id")
+    ResponseEntity<String> deleteOrderById(@RequestParam String clientId, @RequestParam String orderId);
 }

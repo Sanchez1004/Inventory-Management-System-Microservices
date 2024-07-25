@@ -91,24 +91,24 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Integer> availableItems = new LinkedHashMap<>();
         Map<String, Integer> failedItems = new LinkedHashMap<>();
 
-        for (Map.Entry<String, Integer> entry : request.getItemList().entrySet()) {
-            String itemId = entry.getKey();
-            Integer quantity = entry.getValue();
-
-            if (Boolean.TRUE.equals(inventoryServiceClient.isItemAvailable(itemId, quantity).getBody())) {
-                availableItems.put(itemId, quantity);
-            } else {
-                failedItems.put("Not enough stock for item: " + itemId, quantity);
-            }
-        }
+        organizeItems(request, availableItems, failedItems, entity);
 
         if (failedItems.isEmpty()) {
+            Map<String, Integer> newItemList = new LinkedHashMap<>();
+
             for (Map.Entry<String, Integer> entry : availableItems.entrySet()) {
                 String itemId = entry.getKey();
                 Integer quantity = entry.getValue();
 
-                Integer oldQuantity = entity.getItemList().get(itemId);
-                handleAvailableItemsList(entity, itemId, quantity, oldQuantity);
+                handleAvailableItemsList(entity, itemId, quantity, newItemList);
+            }
+
+            Double newTotal = inventoryServiceClient.getItemListTotal(newItemList).getBody();
+            entity.getItemList().putAll(newItemList);
+
+            if (newTotal != null && newTotal >= 0) {
+                entity.setOrderTotal(newTotal);
+                updateUserOrders(orderMapper.toDTO(entity));
             }
         } else {
             entity.setItemList(failedItems);
@@ -116,22 +116,45 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void handleAvailableItemsList(OrderEntity entity, String itemId, Integer quantity, Integer oldQuantity) {
+    private void organizeItems(OrderDTO request, Map<String, Integer> availableItems, Map<String, Integer> failedItems, OrderEntity entity) {
+        for (Map.Entry<String, Integer> entry : request.getItemList().entrySet()) {
+            String itemId = entry.getKey();
+            Integer quantity = entry.getValue();
+
+            if (quantity != null && quantity > 0) {
+                if (Boolean.TRUE.equals(inventoryServiceClient.isItemAvailable(itemId, quantity).getBody())) {
+                    availableItems.put(itemId, quantity);
+                } else {
+                    failedItems.put("Not enough stock for item: " + itemId, quantity);
+                }
+            }
+            else {
+                entity.getItemList().remove(itemId);
+            }
+        }
+    }
+
+    private void handleAvailableItemsList(OrderEntity entity, String itemId, Integer quantity, Map<String, Integer> newItemList) {
         if (entity.getItemList().containsKey(itemId)) {
+            Integer oldQuantity = entity.getItemList().get(itemId);
+
             if (oldQuantity < quantity) {
                 if (Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId, quantity - oldQuantity).getBody())){
-                    entity.getItemList().put(itemId, quantity);
+                    newItemList.put(itemId, quantity);
                 }
             }
             else if (oldQuantity > quantity) {
                 if (Boolean.TRUE.equals(inventoryServiceClient.addStockToItem(itemId, oldQuantity - quantity).getBody())) {
-                    entity.getItemList().put(itemId, quantity);
+                    newItemList.put(itemId, quantity);
                 }
             }
             else {
-                if (Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId, quantity).getBody())) {
-                    entity.getItemList().put(itemId, quantity);
-                }
+                newItemList.put(itemId, quantity);
+            }
+        }
+        else {
+            if (Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId, quantity).getBody())) {
+                newItemList.put(itemId, quantity);
             }
         }
     }
@@ -246,7 +269,7 @@ public class OrderServiceImpl implements OrderService {
         OrderEntity orderEntity = findOrderById(orderId);
         if (orderEntity != null) {
             orderRepository.delete(orderEntity);
-            return "Order with id: " + orderId + " deleted successfully";
+            return userServiceClient.deleteOrderById(orderEntity.getClientId(), orderId).getBody();
         }
         return "Order with id: " + orderId + " not found";
     }

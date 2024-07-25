@@ -17,4 +17,5 @@ public interface ClientService {
     ClientDTO updateClientOrdersByClientId(OrderDetailsDTO orderDetailsDTO, String id);
     ClientDTO updateClientOrderStatusByClientId(String orderId, OrderStatus newOrderStatus, String clientId);
     String deleteClientById(String id);
+    String deleteOrderDetailsById(String clientId, String orderId);
 }

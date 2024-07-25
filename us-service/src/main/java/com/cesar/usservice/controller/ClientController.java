@@ -100,6 +100,15 @@ public class ClientController {
         }
     }
 
+    @PutMapping("/delete-order-by-id")
+    ResponseEntity<String> deleteOrderById(@RequestParam String clientId, @RequestParam String orderId) {
+        try {
+            return ResponseEntity.ok(clientService.deleteOrderDetailsById(clientId, orderId));
+        } catch (ClientException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
     @DeleteMapping("/delete-client-by-id")
     ResponseEntity<String> deleteClientById(@RequestParam String id) {
         try {
