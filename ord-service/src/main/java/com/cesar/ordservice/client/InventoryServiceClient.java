@@ -1,8 +1,10 @@
 package com.cesar.ordservice.client;
 
+import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,9 +22,12 @@ public interface InventoryServiceClient {
     @PutMapping("/api/inventories/deduct-items-by-id")
     ResponseEntity<Map<String, Integer>> deductItemsById(@RequestBody Map<String, Integer> itemsForDeduct);
 
-    @GetMapping("/api/inventories/get-item-list-total")
+    @PostMapping("/api/inventories/get-item-list-total")
     ResponseEntity<Double> getItemListTotal(@RequestBody Map<String, Integer> itemList);
 
     @PutMapping("/api/inventories/add-stock-by-id")
     ResponseEntity<Boolean> addStockToItem(@RequestParam String id, @RequestParam int quantity);
+
+    @GetMapping("/api/inventories/check-item-availability")
+    ResponseEntity<Boolean> isItemAvailable(@RequestParam String itemId, @RequestParam Integer quantity);
 }

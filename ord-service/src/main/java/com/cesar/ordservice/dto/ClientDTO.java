@@ -17,5 +17,5 @@ public class ClientDTO {
     private String firstName;
     private String lastName;
     private Address address;
-    private String mail;
+    private String email;
 }

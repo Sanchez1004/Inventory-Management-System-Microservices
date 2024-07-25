@@ -63,36 +63,34 @@ public class ClientServiceImpl implements ClientService {
             }
         });
         updateFieldMap.put(ClientField.ORDER_DETAILS, (entity, request) -> {
-            List<OrderDetailsDTO> orderList = entity.getPendingOrders();
-            OrderDetailsDTO newOrderDetails = request.getPendingOrders().getFirst();
+            if (request.getPendingOrders() != null) {
+                List<OrderDetailsDTO> orderList = entity.getPendingOrders();
+                OrderDetailsDTO newOrderDetails = request.getPendingOrders().getFirst();
 
-            if (orderList == null) {
-                orderList = new ArrayList<>();
-                orderList.add(newOrderDetails);
-                entity.setPendingOrders(orderList);
-                return;
-            }
-
-            if (orderExist(orderList, newOrderDetails)) {
-                entity.setPendingOrders(orderList);
-            }
-            else {
-                orderList.add(newOrderDetails);
-                entity.setPendingOrders(orderList);
+                updateItemList(orderList, newOrderDetails, entity);
             }
         });
     }
 
-    private boolean orderExist(List<OrderDetailsDTO> orderList, OrderDetailsDTO newOrderDetails) {
-        for (OrderDetailsDTO order : orderList) {
-            if (order.getId().equals(newOrderDetails.getId())) {
-                orderList.set(orderList.indexOf(order), newOrderDetails);
-                return true;
+    private void updateItemList(List<OrderDetailsDTO> orderList, OrderDetailsDTO newOrderDetails, ClientEntity entity) {
+        if (orderList != null) {
+            if (orderList.isEmpty()) {
+                orderList.add(newOrderDetails);
             }
+            else {
+                for (OrderDetailsDTO order : orderList) {
+                    if (Objects.equals(order.getId(), newOrderDetails.getId())) {
+                        order.setOrderStatus(newOrderDetails.getOrderStatus());
+                        order.setOrderTotal(newOrderDetails.getOrderTotal());
+                        entity.setPendingOrders(orderList);
+                        break;
+                    }
+                }
+                orderList.add(newOrderDetails);
+            }
+            entity.setPendingOrders(orderList);
         }
-        return false;
     }
-
 
     @Override
     public ClientDTO getClientById(String id) {
@@ -157,9 +155,14 @@ public class ClientServiceImpl implements ClientService {
             logger.error("User details cannot be null, every field must be full");
             throw new ClientException("The order details cannot be empty");
         }
+
+        List<OrderDetailsDTO> newOrder = new ArrayList<>();
+        newOrder.add(orderDetailsDTO);
+
         ClientEntity clientEntity = clientMapper.toEntity(getClientById(id));
+
         ClientDTO clientDTO = ClientDTO.builder()
-                .pendingOrders(List.of(orderDetailsDTO))
+                .pendingOrders(newOrder)
                 .build();
 
         BiConsumer<ClientEntity, ClientDTO> updateOrderDetails = updateFieldMap.get(ClientField.ORDER_DETAILS);

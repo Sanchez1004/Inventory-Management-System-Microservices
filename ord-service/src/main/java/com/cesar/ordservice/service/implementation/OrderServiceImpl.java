@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Service
@@ -54,46 +56,84 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         });
+
         updateFieldMap.put(OrderField.CLIENT_ID, (entity, request) -> {
-            ClientDTO clientDTO = userServiceClient.getClientById(request.getClientId()).getBody();
-            if (clientDTO != null) {
-                userServiceClient.deleteClientOrderByOrderId(entity.getClientId(), entity.getId());
+            if (request.getClientId() != null) {
+                ClientDTO clientDTO = userServiceClient.getClientById(request.getClientId()).getBody();
 
-                userServiceClient.updateClientOrdersById(
-                        OrderDetailsDTO.builder()
-                                .orderTotal(entity.getOrderTotal())
-                                .orderStatus(entity.getOrderStatus())
-                                .id(entity.getId())
-                                .build(),
-                        clientDTO.getId());
+                if (clientDTO != null) {
+                    userServiceClient.deleteClientOrderByOrderId(entity.getClientId(), entity.getId());
 
-                entity.setClientId(clientDTO.getId());
-                entity.setClientFirstName(clientDTO.getFirstName());
-                entity.setClientLastName(clientDTO.getLastName());
-                entity.setClientMail(clientDTO.getMail());
+                    userServiceClient.updateClientOrdersById(
+                            OrderDetailsDTO.builder()
+                                    .orderTotal(entity.getOrderTotal())
+                                    .orderStatus(entity.getOrderStatus())
+                                    .id(entity.getId())
+                                    .build(),
+                            clientDTO.getId());
+
+                    entity.setClientId(clientDTO.getId());
+                    entity.setClientFirstName(clientDTO.getFirstName());
+                    entity.setClientLastName(clientDTO.getLastName());
+                    entity.setClientEmail(clientDTO.getEmail());
+                }
             }
         });
-        updateFieldMap.put(OrderField.ITEM_LIST, (entity, request) -> {
-              for (Map.Entry<String, Integer> entry : request.getItemList().entrySet()) {
-                  String itemId = entry.getKey();
-                  Integer quantity = entry.getValue();
 
-                  if (entity.getItemList().containsKey(itemId)) {
-                      Integer oldItemQuantity = entity.getItemList().get(itemId);
-                      if (oldItemQuantity > quantity && Boolean.TRUE.equals(inventoryServiceClient.addStockToItem(itemId,
-                              oldItemQuantity - quantity).getBody())) {
-                          entity.getItemList().put(itemId, oldItemQuantity - quantity);
-                      }
-                      if (oldItemQuantity < quantity && Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId,
-                              quantity - oldItemQuantity).getBody())) {
-                              entity.getItemList().put(itemId, quantity - oldItemQuantity);
-                      }
-                  }
-                  if (Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId, quantity).getBody())) {
-                      entity.getItemList().put(itemId, quantity);
-                  }
-              }
+        updateFieldMap.put(OrderField.ITEM_LIST, (entity, request) -> {
+            if (request.getItemList() != null) {
+                adjustOrder(entity, request);
+            }
         });
+    }
+
+    private void adjustOrder(OrderEntity entity, OrderDTO request) {
+        Map<String, Integer> availableItems = new LinkedHashMap<>();
+        Map<String, Integer> failedItems = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Integer> entry : request.getItemList().entrySet()) {
+            String itemId = entry.getKey();
+            Integer quantity = entry.getValue();
+
+            if (Boolean.TRUE.equals(inventoryServiceClient.isItemAvailable(itemId, quantity).getBody())) {
+                availableItems.put(itemId, quantity);
+            } else {
+                failedItems.put("Not enough stock for item: " + itemId, quantity);
+            }
+        }
+
+        if (failedItems.isEmpty()) {
+            for (Map.Entry<String, Integer> entry : availableItems.entrySet()) {
+                String itemId = entry.getKey();
+                Integer quantity = entry.getValue();
+
+                Integer oldQuantity = entity.getItemList().get(itemId);
+                handleAvailableItemsList(entity, itemId, quantity, oldQuantity);
+            }
+        } else {
+            entity.setItemList(failedItems);
+            entity.setOrderStatus(OrderStatus.ERROR);
+        }
+    }
+
+    private void handleAvailableItemsList(OrderEntity entity, String itemId, Integer quantity, Integer oldQuantity) {
+        if (entity.getItemList().containsKey(itemId)) {
+            if (oldQuantity < quantity) {
+                if (Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId, quantity - oldQuantity).getBody())){
+                    entity.getItemList().put(itemId, quantity);
+                }
+            }
+            else if (oldQuantity > quantity) {
+                if (Boolean.TRUE.equals(inventoryServiceClient.addStockToItem(itemId, oldQuantity - quantity).getBody())) {
+                    entity.getItemList().put(itemId, quantity);
+                }
+            }
+            else {
+                if (Boolean.TRUE.equals(inventoryServiceClient.deductItemById(itemId, quantity).getBody())) {
+                    entity.getItemList().put(itemId, quantity);
+                }
+            }
+        }
     }
 
     @Override
@@ -104,54 +144,83 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        if (orderDTO.getClientId().isEmpty()) {
-            logger.error("Client id is required");
-            throw new OrderException("Client id is required");
-        }
-        ClientDTO clientDTO = userServiceClient.getClientById(orderDTO.getClientId()).getBody();
-        if (clientDTO == null) {
+        if (!orderDTO.getClientId().isEmpty()) {
+            ClientDTO clientDTO = userServiceClient.getClientById(orderDTO.getClientId()).getBody();
+
+            if (clientDTO != null && !clientDTO.getFirstName().isEmpty() && !clientDTO.getLastName().isEmpty() && !orderDTO.getItemList().isEmpty()) {
+                Map<String, Integer> itemListResponse = inventoryServiceClient.deductItemsById(orderDTO.getItemList()).getBody();
+
+                if (itemListResponse != null && !itemListResponse.isEmpty()) {
+                    return handleListResponse(itemListResponse, clientDTO);
+                }
+            }
             logger.error("Client not found");
+            logger.error("The client name, email and order item list is required!");
             throw new OrderException("Client not found");
         }
+        logger.error("Client id is required");
+        throw new OrderException("Client id is required");
+    }
 
-        if (!clientDTO.getFirstName().isEmpty() && !clientDTO.getLastName().isEmpty() && !orderDTO.getItemList().isEmpty()) {
-            Map<String, Integer> addedItemList = inventoryServiceClient.deductItemsById(orderDTO.getItemList()).getBody();
+    private OrderDTO handleListResponse(Map<String, Integer> itemListResponse, ClientDTO clientDTO) {
+        Map<String, Integer> outOfStockItems = new LinkedHashMap<>();
+        Map<String, Integer> deductedItems = new LinkedHashMap<>();
 
-            if (addedItemList != null && addedItemList.size() != orderDTO.getItemList().size()) {
-                return OrderDTO.builder()
-                        .orderStatus(OrderStatus.ERROR)
-                        .itemList(addedItemList)
-                        .build();
+        for (Map.Entry<String, Integer> entry : itemListResponse.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+
+            if (key.contains(" - ")) {
+                String[] parts = key.split(" - ");
+                String id = parts[0];
+                String name = parts[1];
+
+                logger.info("Item with id: '{}' and name: '{}', it's out of stock, actual stock: '{}'", id, name, value);
+                outOfStockItems.put(key, value);
             }
-
-            if (addedItemList != null && !addedItemList.isEmpty()) {
-                Double orderTotal = inventoryServiceClient.getItemListTotal(addedItemList).getBody();
-                if (orderTotal != null) {
-                    OrderEntity orderEntity = OrderEntity.builder()
-                            .date(LocalDateTime.now())
-                            .orderStatus(OrderStatus.CREATED)
-                            .itemList(addedItemList)
-                            .orderTotal(orderTotal)
-                            .clientId(orderDTO.getClientId())
-                            .clientFirstName(orderDTO.getClientFirstName())
-                            .clientLastName(orderDTO.getClientLastName())
-                            .clientMail(orderDTO.getClientMail())
-                            .build();
-
-                    userServiceClient.updateClientOrdersById(OrderDetailsDTO.builder()
-                                    .orderStatus(orderEntity.getOrderStatus()).orderTotal(orderEntity.getOrderTotal()).build(),
-                            clientDTO.getId());
-
-                    return orderMapper.toDTO(orderEntity);
-                }
-                logger.error("Order total cannot be 0, check if the client is working");
-                throw new OrderException("Order total cannot be empty!");
+            else {
+                deductedItems.put(key, value);
             }
-            logger.error("The client name, email and order item list is required!");
-            throw new OrderException("The client name, email and order item list is required!");
         }
-        logger.error("Item list cannot be empty!");
-        throw new OrderException("Item list cannot be empty!");
+        if (!outOfStockItems.isEmpty()) {
+            return OrderDTO.builder()
+                    .orderStatus(OrderStatus.ERROR)
+                    .itemList(outOfStockItems)
+                    .build();
+        }
+
+        if (!deductedItems.isEmpty()) {
+            Double orderTotal = inventoryServiceClient.getItemListTotal(deductedItems).getBody();
+            if (orderTotal != null && orderTotal > 0) {
+                OrderEntity orderEntity = OrderEntity.builder()
+                        .date(LocalDateTime.now())
+                        .orderStatus(OrderStatus.CREATED)
+                        .itemList(deductedItems)
+                        .orderTotal(orderTotal)
+                        .clientId(clientDTO.getId())
+                        .clientFirstName(clientDTO.getFirstName())
+                        .clientLastName(clientDTO.getLastName())
+                        .clientEmail(clientDTO.getEmail())
+                        .build();
+
+                OrderDTO orderCreated = orderMapper.toDTO(orderRepository.save(orderEntity));
+                updateUserOrders(orderCreated);
+                return orderCreated;
+            }
+            logger.error("Order total cannot be 0, check if the client is working");
+            throw new OrderException("Order total cannot be empty!");
+        }
+        throw new OrderException("There was an error handling the item list response");
+    }
+
+    private void updateUserOrders(OrderDTO orderDTO) {
+        OrderDetailsDTO orderDetailsDTO = OrderDetailsDTO.builder()
+                .id(orderDTO.getId())
+                .orderStatus(orderDTO.getOrderStatus())
+                .orderTotal(orderDTO.getOrderTotal())
+                .build();
+
+        userServiceClient.updateClientOrdersById(orderDetailsDTO, orderDTO.getClientId());
     }
 
     @Override
@@ -166,16 +235,24 @@ public class OrderServiceImpl implements OrderService {
             entry.getValue().accept(orderEntity, orderDTO);
         }
 
+        if (orderEntity.getOrderStatus() == OrderStatus.ERROR) {
+            return orderMapper.toDTO(orderEntity);
+        }
         return orderMapper.toDTO(orderRepository.save(orderEntity));
     }
 
     @Override
     public String deleteOrderById(String orderId) {
-        OrderEntity orderEntity = orderMapper.toEntity(getOrderById(orderId));
+        OrderEntity orderEntity = findOrderById(orderId);
         if (orderEntity != null) {
             orderRepository.delete(orderEntity);
             return "Order with id: " + orderId + " deleted successfully";
         }
-        return "Order with id: " + orderId + " deleted successfully";
+        return "Order with id: " + orderId + " not found";
+    }
+
+    private OrderEntity findOrderById(String id) {
+        Optional<OrderEntity> orderEntity = orderRepository.findOrderEntityById(id);
+        return orderEntity.orElse(null);
     }
 }

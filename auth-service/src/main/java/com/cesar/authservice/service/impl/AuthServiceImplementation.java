@@ -1,6 +1,6 @@
 package com.cesar.authservice.service.impl;
 
-import com.cesar.authservice.AuthException;
+import com.cesar.authservice.exception.AuthException;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
@@ -68,6 +68,18 @@ public class AuthServiceImplementation implements AuthService {
                 .token(jwtService.createToken(userDetails))
                 .refreshToken(jwtService.createRefreshToken(new HashMap<>(), userDetails))
                 .build();
+    }
+
+    @Override
+    public String getServiceToken(String email, String password) {
+        if (!authUserService.userExistsByEmail(email)) {
+            throw new AuthException("Check email, no email found");
+        }
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+
+        UserDetails userDetails = authUserService.userDetailsService().loadUserByUsername(email);
+        return jwtService.createToken(userDetails);
     }
 
     @Override

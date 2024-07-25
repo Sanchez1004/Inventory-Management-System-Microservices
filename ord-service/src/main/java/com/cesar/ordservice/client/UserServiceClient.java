@@ -1,5 +1,6 @@
 package com.cesar.ordservice.client;
 
+import com.cesar.ordservice.config.FeignConfig;
 import com.cesar.ordservice.dto.ClientDTO;
 import com.cesar.ordservice.dto.OrderDetailsDTO;
 import com.cesar.ordservice.utils.OrderStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "us-service")
+@FeignClient(name = "us-service", configuration = FeignConfig.class)
 public interface UserServiceClient {
     // /api/users/clients
 

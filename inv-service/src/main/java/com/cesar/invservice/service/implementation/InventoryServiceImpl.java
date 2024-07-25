@@ -191,11 +191,22 @@ public class InventoryServiceImpl implements InventoryService {
         throw new InventoryException("There are no items for process");
     }
 
+    @Override
+    public boolean isItemAvailable(String itemId, Integer quantity) {
+        InventoryEntity inventoryEntity = inventoryRepository.findInventoryEntityById(itemId).orElse(null);
+
+        if (inventoryEntity != null) {
+            return inventoryEntity.getItem().getQuantity() >= quantity;
+        }
+        return false;
+    }
+
     private void deductItems(String id, Integer quantityForDeduct, Map<String, Integer> failedItems, Map<String, Integer> deductedItems) {
         InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(id));
         if (quantityForDeduct > 0) {
             if (inventoryEntity.getItem() != null && inventoryEntity.getItem().getQuantity() < quantityForDeduct) {
                 failedItems.put(inventoryEntity.getId() + " - " + inventoryEntity.getItem().getName(), inventoryEntity.getItem().getQuantity());
+                logger.error("There's no enough stock for item with id: {}", inventoryEntity.getId());
             }
             if (inventoryEntity.getItem() != null && failedItems.isEmpty()) {
                 inventoryEntity.getItem().setQuantity(inventoryEntity.getItem().getQuantity() - quantityForDeduct);

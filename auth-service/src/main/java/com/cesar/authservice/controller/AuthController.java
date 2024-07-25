@@ -1,22 +1,17 @@
 package com.cesar.authservice.controller;
 
-import com.cesar.authservice.AuthException;
+import com.cesar.authservice.exception.AuthException;
 import com.cesar.authservice.dto.AuthResponse;
 import com.cesar.authservice.dto.LoginRequest;
 import com.cesar.authservice.dto.RegisterRequest;
-import com.cesar.authservice.entity.AuthUser;
 import com.cesar.authservice.entity.AuthUserDTO;
 import com.cesar.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,6 +36,15 @@ public class AuthController {
     ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
             return ResponseEntity.ok(authService.login(loginRequest));
+        } catch (AuthException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("get-service-token")
+    ResponseEntity<String> getServiceToken(@RequestParam String email, @RequestParam String password) {
+        try {
+            return ResponseEntity.ok(authService.getServiceToken(email, password));
         } catch (AuthException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
         }

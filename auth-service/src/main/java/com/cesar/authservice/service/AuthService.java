@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface AuthService {
     AuthResponse register(RegisterRequest registerRequest);
     AuthResponse login(LoginRequest loginRequest);
+    String getServiceToken(String email, String password);
     String getEmailFromToken(String token);
     Boolean validateToken(String token);
     AuthUserDTO getUserByEmail(String email);
-
     UserDetails getUserDetails(String email);
 }

@@ -25,7 +25,7 @@ public class OrderEntity {
     private String clientId;
     private String clientFirstName;
     private String clientLastName;
-    private String clientMail;
+    private String clientEmail;
     private Map<String, Integer> itemList;
     private double orderTotal;
     private LocalDateTime date;

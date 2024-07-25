@@ -30,6 +30,11 @@ spring:
           predicates:
             - Path=/api/reports/**
 
+        - id: ord-service
+          uri: lb://ord-service
+          predicates:
+            - Path=/api/orders/**
+
         - id: not-service
           uri: lb://not-service
           predicates:

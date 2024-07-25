@@ -53,7 +53,16 @@ public class InventoryController {
         }
     }
 
-    @GetMapping("/get-item-list-total")
+    @GetMapping("/check-item-availability")
+    ResponseEntity<Boolean> isItemAvailable(@RequestParam String itemId, @RequestParam Integer quantity) {
+        try {
+            return ResponseEntity.ok(inventoryService.isItemAvailable(itemId, quantity));
+        } catch (InventoryException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/get-item-list-total")
     ResponseEntity<Double> getItemListTotal(@RequestBody Map<String, Integer> itemList) {
         try {
             return ResponseEntity.ok(inventoryService.getItemListTotal(itemList));
