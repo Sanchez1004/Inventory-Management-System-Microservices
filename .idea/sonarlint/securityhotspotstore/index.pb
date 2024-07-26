@@ -196,3 +196,7 @@ Ford-service/src/main/java/com/cesar/ordservice/config/FeignConfig.java,d\8\d8e
 Kord-service/src/main/java/com/cesar/ordservice/security/SecurityConfig.java,1\e\1e695830ad88521ebe83e19fce8fbeecfc6e5656
 ~
 Nord-service/src/main/java/com/cesar/ordservice/controller/OrderController.java,4\4\44cb57c81f53830874d28a47f538af029d24f73a
+{
+Kus-service/src/test/java/com/cesar/usservice/UsServiceApplicationTests.java,4\8\488c3263bf10509c7b7dec79957bc6b05fee9472
+C
+azure-pipelines.yml,4\0\40ebc6823f24f296c0cd3fddd6ccda69b74ff2e4
