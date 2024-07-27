@@ -1,8 +1,7 @@
-server:
-  port: 8092
-
 spring:
+  profiles:
+    active: @profileActive@
   application:
-    name: svc-inventory
+    name: not-service
   config:
     import: optional:configserver:http://localhost:/8888
