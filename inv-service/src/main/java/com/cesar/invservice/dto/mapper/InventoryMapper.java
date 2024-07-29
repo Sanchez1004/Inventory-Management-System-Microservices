@@ -19,6 +19,7 @@ public class InventoryMapper {
                 .id(inventoryEntity.getId())
                 .item(inventoryEntity.getItem())
                 .salePrice(inventoryEntity.getSalePrice())
+                .handleCategory(inventoryEntity.getHandleCategory())
                 .build();
     }
 
@@ -27,6 +28,7 @@ public class InventoryMapper {
                 .id(inventoryDTO.getId())
                 .item(inventoryDTO.getItem())
                 .salePrice(inventoryDTO.getSalePrice())
+                .handleCategory(inventoryDTO.getHandleCategory())
                 .build();
     }
 }

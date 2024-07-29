@@ -1,5 +1,6 @@
 package com.cesar.invservice.entity;
 
+import com.cesar.invservice.utils.HandleCategory;
 import com.cesar.invservice.utils.Item;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -22,6 +23,7 @@ public class InventoryEntity {
     private String id;
     private Item item;
     private double salePrice;
+    private HandleCategory handleCategory;
 
     // More prices can be added if needed
 

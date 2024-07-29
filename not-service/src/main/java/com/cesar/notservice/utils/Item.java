@@ -1,4 +1,4 @@
-package com.cesar.invservice.utils;
+package com.cesar.notservice.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

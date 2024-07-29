@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: not-service
+  rabbitmq:
+    host: 192.168.1.2
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   instance:
@@ -17,3 +22,26 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+rabbitmq:
+  exchange:
+    name: ${RABBIT_EXCHANGE_NAME}
+  inventory:
+    queue:
+      string:
+        name: ${RABBIT_INVENTORY_QUEUE_STRING_NAME}
+      json:
+        name: ${RABBIT_INVENTORY_QUEUE_JSON_NAME}
+    routing:
+      key:
+        string:
+          name: ${RABBIT_INVENTORY_STRING_ROUTING_KEY}
+        json:
+          name: ${RABBIT_INVENTORY_JSON_ROUTING_KEY}
+
+  order:
+    queue:
+      name:
+    routing:
+      key:
+

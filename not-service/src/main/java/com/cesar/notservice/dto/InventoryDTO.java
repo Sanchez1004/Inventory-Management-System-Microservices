@@ -1,9 +1,10 @@
-package com.cesar.invservice.dto;
+package com.cesar.notservice.dto;
 
-import com.cesar.invservice.utils.HandleCategory;
-import com.cesar.invservice.utils.Item;
+import com.cesar.notservice.utils.HandleCategory;
+import com.cesar.notservice.utils.Item;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
