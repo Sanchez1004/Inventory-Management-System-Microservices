@@ -20,6 +20,7 @@ public class InventoryMapper {
                 .item(inventoryEntity.getItem())
                 .salePrice(inventoryEntity.getSalePrice())
                 .handleCategory(inventoryEntity.getHandleCategory())
+                .threshold(inventoryEntity.getThreshold())
                 .build();
     }
 
@@ -29,6 +30,7 @@ public class InventoryMapper {
                 .item(inventoryDTO.getItem())
                 .salePrice(inventoryDTO.getSalePrice())
                 .handleCategory(inventoryDTO.getHandleCategory())
+                .threshold(inventoryDTO.getThreshold())
                 .build();
     }
 }

@@ -24,6 +24,7 @@ public class InventoryEntity {
     private Item item;
     private double salePrice;
     private HandleCategory handleCategory;
+    private int threshold;
 
     // More prices can be added if needed
 

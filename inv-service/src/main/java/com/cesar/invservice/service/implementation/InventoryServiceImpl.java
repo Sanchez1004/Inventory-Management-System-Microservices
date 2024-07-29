@@ -4,10 +4,13 @@ import com.cesar.invservice.dto.InventoryDTO;
 import com.cesar.invservice.dto.mapper.InventoryMapper;
 import com.cesar.invservice.entity.InventoryEntity;
 import com.cesar.invservice.exception.InventoryException;
+import com.cesar.invservice.publisher.RabbitMQProducer;
 import com.cesar.invservice.repository.InventoryRepository;
 import com.cesar.invservice.service.InventoryService;
+import com.cesar.invservice.utils.HandleCategory;
 import com.cesar.invservice.utils.InventoryField;
 import com.cesar.invservice.utils.Item;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Service;
@@ -21,16 +24,19 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Service
+@Transactional
 public class InventoryServiceImpl implements InventoryService {
 
     private static final Logger logger = LogManager.getLogger(InventoryServiceImpl.class);
 
+    private final RabbitMQProducer rabbitMQProducer;
     private final InventoryRepository inventoryRepository;
     private final InventoryMapper inventoryMapper;
     private final Map<InventoryField, BiConsumer<InventoryEntity, InventoryDTO>> updateFieldMap = new EnumMap<>(InventoryField.class);
 
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepository, InventoryMapper inventoryMapper) {
+    public InventoryServiceImpl(RabbitMQProducer rabbitMQProducer, InventoryRepository inventoryRepository, InventoryMapper inventoryMapper) {
+        this.rabbitMQProducer = rabbitMQProducer;
         this.inventoryRepository = inventoryRepository;
         this.inventoryMapper = inventoryMapper;
 
@@ -132,7 +138,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryDTO updateItemByName(InventoryDTO inventoryDTO, String name) {
+    public InventoryDTO updateItemByName(InventoryDTO inventoryDTO, String name) throws JsonProcessingException {
         if (name.isEmpty() && inventoryDTO.getItem() == null) {
             logger.error("Item name cannot be empty and at least one item field has to be modified");
             throw new InventoryException("Item name cannot be empty and at least one item field has to be modified");
@@ -143,13 +149,14 @@ public class InventoryServiceImpl implements InventoryService {
                 entry.getValue().accept(inventoryEntity, inventoryDTO);
             }
 
+            inventoryEntity.setHandleCategory(HandleCategory.ITEM_UPDATED);
+            rabbitMQProducer.sendJSONMessage(inventoryMapper.toDTO(inventoryEntity));
             return inventoryMapper.toDTO(inventoryRepository.save(inventoryEntity));
         }
         logger.error("The item with {} doesn't exist or the request has a bad format", name);
         throw new InventoryException("There was an error updating the item");
     }
 
-    @Transactional
     @Override
     public Boolean addStockToItemById(String id, int quantity) {
         if (quantity > 0) {
@@ -170,7 +177,6 @@ public class InventoryServiceImpl implements InventoryService {
         throw new InventoryException("Quantity has to be more than zero");
     }
 
-    @Transactional
     @Override
     public Map<String, Integer> deductItemsById(Map<String, Integer> itemsForDeduct) {
         Map<String, Integer> failedItems = new LinkedHashMap<>();
@@ -219,7 +225,6 @@ public class InventoryServiceImpl implements InventoryService {
         }
     }
 
-    @Transactional
     @Override
     public Boolean deductItemById(String itemId, Integer quantityForDeduct) {
         InventoryEntity inventoryEntity = inventoryMapper.toEntity(getItemById(itemId));

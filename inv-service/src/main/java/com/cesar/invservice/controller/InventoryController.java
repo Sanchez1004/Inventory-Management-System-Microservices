@@ -3,6 +3,7 @@ package com.cesar.invservice.controller;
 import com.cesar.invservice.dto.InventoryDTO;
 import com.cesar.invservice.exception.InventoryException;
 import com.cesar.invservice.service.InventoryService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,7 +94,7 @@ public class InventoryController {
     ResponseEntity<InventoryDTO> updateItemByName(@RequestBody InventoryDTO inventoryDTO, @RequestParam String name) {
         try {
             return ResponseEntity.ok(inventoryService.updateItemByName(inventoryDTO, name));
-        } catch (InventoryException e) {
+        } catch (InventoryException | JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }

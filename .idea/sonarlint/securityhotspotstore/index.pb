@@ -228,3 +228,17 @@ Hinv-service/src/main/java/com/cesar/invservice/utils/HandleCategory.java,1\e\1
 Rinv-service/src/main/java/com/cesar/invservice/publisher/RabbitJSONMQProducer.java,e\a\ea450f23ba62a4e23ce71744af41786bd3ccff38
 „
 Tinv-service/src/main/java/com/cesar/invservice/publisher/RabbitStringMQProducer.java,f\2\f26e5c33a697a3877da485890999cbd2dfc5b10d
+
+Oinv-service/src/main/java/com/cesar/invservice/service/StockCheckerService.java,e\8\e8702814dbc29d7cc62071deb9fda0289d530598
+œ
+linv-service/src/main/java/com/cesar/invservice/service/implementation/StockCheckerServiceImplementation.java,9\f\9fe569bafdd424c972483c49a8e3a2514f1093e9
+•
+einv-service/src/main/java/com/cesar/invservice/service/implementation/StockCheckerImplementation.java,9\9\996399b9af7c3f97973ccdad77019697d11e1d9f
+x
+Hinv-service/src/main/java/com/cesar/invservice/service/StockChecker.java,1\8\18defe87b729431e48fc94090147a299dd674eb2
+z
+Jinv-service/src/main/java/com/cesar/invservice/config/SchedulerConfig.java,f\e\fee2b41eaa30dbe00a62c35bfdc3e67f286c9925
+‡
+Winv-service/src/main/java/com/cesar/invservice/service/implementation/StockChecker.java,a\a\aa6933a53e560e1e220178a38dc8539db20bdcc6
+v
+Finv-service/src/main/java/com/cesar/invservice/utils/StockChecker.java,a\3\a36a849c6301a7d5d46bbb17c05aaff586f30e8f

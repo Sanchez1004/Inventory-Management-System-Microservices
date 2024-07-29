@@ -4,7 +4,6 @@ import com.cesar.notservice.utils.HandleCategory;
 import com.cesar.notservice.utils.Item;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,4 +18,5 @@ public class InventoryDTO {
     private Item item;
     private double salePrice;
     private HandleCategory handleCategory;
+    private int threshold;
 }

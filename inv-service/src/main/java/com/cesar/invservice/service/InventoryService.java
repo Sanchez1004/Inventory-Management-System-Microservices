@@ -1,6 +1,7 @@
 package com.cesar.invservice.service;
 
 import com.cesar.invservice.dto.InventoryDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ public interface InventoryService {
     InventoryDTO getItemById(String id);
     InventoryDTO addItem(InventoryDTO inventoryDTO);
     InventoryDTO updateItemById(InventoryDTO inventoryDTO, String id);
-    InventoryDTO updateItemByName(InventoryDTO inventoryDTO, String name);
+    InventoryDTO updateItemByName(InventoryDTO inventoryDTO, String name) throws JsonProcessingException;
     Boolean addStockToItemById(String id, int quantity);
     Map<String, Integer> deductItemsById(Map<String, Integer> itemsForDeduct);
     boolean isItemAvailable(String itemId, Integer quantity);

@@ -18,4 +18,5 @@ public class InventoryDTO {
     private Item item;
     private double salePrice;
     private HandleCategory handleCategory;
+    private int threshold;
 }
