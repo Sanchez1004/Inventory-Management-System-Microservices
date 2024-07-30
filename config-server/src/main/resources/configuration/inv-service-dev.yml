@@ -1,21 +1,37 @@
 server:
-  port: 8090
+  port: 0
 
 spring:
   application:
     name: inv-service
   data:
     mongodb:
-      uri: ${MONGOURI}
+      uri: ${MONGOURI_INVENTORIES}
   security:
     api:
       key: ${API_KEY}
     admin:
       mail: ${ADMIN_MAIL}
       password: ${ADMIN_PASSWORD}
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
 
 eureka:
   client:
     enabled: false
   instance:
     enabled: false
+
+rabbitmq:
+  exchange:
+    name: ${RABBIT_EXCHANGE_NAME}
+  inventory:
+    routing:
+      key:
+        string:
+          name: ${RABBIT_INVENTORY_STRING_ROUTING_KEY}
+        json:
+          name: ${RABBIT_INVENTORY_JSON_ROUTING_KEY}

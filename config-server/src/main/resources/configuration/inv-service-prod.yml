@@ -8,7 +8,7 @@ spring:
     mongodb:
       uri: ${MONGOURI_INVENTORIES}
   rabbitmq:
-    host: localhost
+    host: ${RABBITMQ_HOST}
     port: ${RABBITMQ_PORT}
     username: ${RABBITMQ_USER}
     password: ${RABBITMQ_PASSWORD}
