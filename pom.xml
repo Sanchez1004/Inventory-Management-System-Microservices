@@ -80,6 +80,9 @@
                 <build.profile.id>prod</build.profile.id>
                 <profileActive>prod</profileActive>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
     </profiles>
 
