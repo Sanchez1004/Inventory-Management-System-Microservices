@@ -1,0 +1,25 @@
+server:
+  port: 0
+
+spring:
+  security:
+    api:
+      key: ${API_KEY}
+  application:
+    name: us-service
+  data:
+    mongodb:
+      uri: ${MONGOURI_USERS}
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+    prefer-ip-address: true
+  client:
+      service-url:
+        defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
