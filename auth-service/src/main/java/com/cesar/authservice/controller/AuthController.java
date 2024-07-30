@@ -20,7 +20,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Value("${API_KEY}")
+    @Value("${spring.security.api.key}")
     String defaultApiKey;
 
     @PostMapping("/register")

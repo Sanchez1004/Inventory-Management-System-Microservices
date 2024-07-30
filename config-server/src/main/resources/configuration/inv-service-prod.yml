@@ -8,10 +8,16 @@ spring:
     mongodb:
       uri: ${MONGOURI_INVENTORIES}
   rabbitmq:
-    host: 192.168.1.2
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+  security:
+    api:
+      key: ${API_KEY}
+    admin:
+      mail: ${ADMIN_MAIL}
+      password: ${ADMIN_PASSWORD}
 
 eureka:
   instance:

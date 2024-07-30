@@ -7,14 +7,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGOURI_USERS}
+  security:
+    api:
+      key: ${API_KEY}
 
 eureka:
   client:
     enabled: false
   instance:
     enabled: false
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0

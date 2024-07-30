@@ -35,11 +35,6 @@ spring:
           predicates:
             - Path=/api/orders/**
 
-        - id: not-service
-          uri: lb://not-service
-          predicates:
-            - Path=/api/notifications/**
-
 eureka:
   client:
     service-url:

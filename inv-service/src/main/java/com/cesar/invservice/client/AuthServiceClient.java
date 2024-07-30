@@ -1,6 +1,6 @@
-package com.cesar.ordservice.client;
+package com.cesar.invservice.client;
 
-import com.cesar.ordservice.security.AuthUserDTO;
+import com.cesar.invservice.security.AuthUserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

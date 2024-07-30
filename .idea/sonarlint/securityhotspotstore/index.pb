@@ -242,3 +242,19 @@ Jinv-service/src/main/java/com/cesar/invservice/config/SchedulerConfig.java,f\e
 Winv-service/src/main/java/com/cesar/invservice/service/implementation/StockChecker.java,a\a\aa6933a53e560e1e220178a38dc8539db20bdcc6
 v
 Finv-service/src/main/java/com/cesar/invservice/utils/StockChecker.java,a\3\a36a849c6301a7d5d46bbb17c05aaff586f30e8f
+9
+	README.MD,9\6\968e80af9562e09cebe594968b130076952eafe1
+…
+Uord-service/src/main/java/com/cesar/ordservice/security/CustomUserDetailsService.java,d\2\d28a4acb6197df6d7c89b70a4e2870caf39b4c79
+„
+Tord-service/src/main/java/com/cesar/ordservice/security/JwtAuthentitationFilter.java,0\1\01cc62ab3365dafea3d78931a6bc68114515cc91
+…
+Uinv-service/src/main/java/com/cesar/invservice/security/CustomUserDetailsService.java,9\f\9f0f01a01d2f91cce489411367d51967826561e0
+|
+Linv-service/src/main/java/com/cesar/invservice/client/AuthServiceClient.java,0\1\011c9ebfe87c33169ae4b73e83efc30b1638c375
+„
+Tinv-service/src/main/java/com/cesar/invservice/security/JwtAuthentitationFilter.java,f\5\f5e1fd14ab323e42b78ee46390df6df90a54de63
+{
+Kinv-service/src/main/java/com/cesar/invservice/security/SecurityConfig.java,1\4\140378ffdf876da241bd840c93ca54843b420607
+v
+Finv-service/src/main/java/com/cesar/invservice/config/FeignConfig.java,1\d\1df4d122d6f2d2376ee316c4b9d61d88bced73fe

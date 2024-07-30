@@ -1,6 +1,6 @@
-package com.cesar.ordservice.config;
+package com.cesar.invservice.config;
 
-import com.cesar.ordservice.client.AuthServiceClient;
+import com.cesar.invservice.client.AuthServiceClient;
 import feign.RequestInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

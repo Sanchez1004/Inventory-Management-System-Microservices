@@ -1,6 +1,6 @@
-package com.cesar.usservice.security;
+package com.cesar.invservice.security;
 
-import com.cesar.usservice.client.AuthServiceClient;
+import com.cesar.invservice.client.AuthServiceClient;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

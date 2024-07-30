@@ -7,6 +7,9 @@ spring:
   data:
     mongodb:
       uri: ${MONGOURI_AUTH_USERS}
+  security:
+    api:
+      key: ${API_KEY}
 
 eureka:
   client:

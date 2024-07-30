@@ -1,4 +1,4 @@
-package com.cesar.ordservice.security;
+package com.cesar.invservice.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/orders/**").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/inventories/**").hasAnyAuthority(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager

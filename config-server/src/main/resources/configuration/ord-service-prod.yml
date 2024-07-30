@@ -7,6 +7,12 @@ spring:
   data:
     mongodb:
       uri: ${MONGOURI_ORDERS}
+  security:
+    api:
+      key: ${API_KEY}
+    admin:
+      mail: ${ADMIN_MAIL}
+      password: ${ADMIN_PASSWORD}
 
 eureka:
   instance:

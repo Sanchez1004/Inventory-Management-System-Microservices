@@ -4,14 +4,12 @@ server:
 spring:
   application:
     name: auth-service
+  security:
+    api:
+      key: ${API_KEY}
 
 eureka:
   client:
     enabled: false
   instance:
     enabled: false
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
