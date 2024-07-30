@@ -1,4 +1,4 @@
-# Maven
+
 # Build your Java project and run tests with Apache Maven.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
@@ -10,6 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+# Maven
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'api-gateway/pom.xml'
+    publishJUnitResults: false
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
