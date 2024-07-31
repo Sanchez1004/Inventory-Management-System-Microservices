@@ -1,0 +1,71 @@
+trigger:
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - script: |
+      sudo apt update
+      sudo apt install -y wget
+      wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
+      sudo mkdir -p /usr/lib/jvm
+      sudo tar -xzf jdk-21_linux-x64_bin.tar.gz -C /usr/lib/jvm
+      JDK_DIR="/usr/lib/jvm/jdk-21.0.4"
+      echo "JDK directory: $JDK_DIR"
+      sudo update-alternatives --install /usr/bin/java java $JDK_DIR/bin/java 1000
+      sudo update-alternatives --install /usr/bin/javac javac $JDK_DIR/bin/javac 1000
+      # Ensure the correct JDK is selected
+      sudo update-alternatives --set java $JDK_DIR/bin/java
+      sudo update-alternatives --set javac $JDK_DIR/bin/javac
+      # Verify that the correct JDK is selected
+      java -version
+      javac -version
+    displayName: 'Install and Configure JDK 21'
+
+  - script: |
+      cd config-server
+      mvn spring-boot:run &
+      CONFIG_SERVER_PID=$!
+      echo "Config Server PID: $CONFIG_SERVER_PID"
+    displayName: 'Run Config Server'
+
+  - script: |
+      cd eureka-service
+      mvn spring-boot:run &
+      EUREKA_SERVICE_PID=$!
+      echo "Eureka Service PID: $EUREKA_SERVICE_PID"
+    displayName: 'Run Eureka Service'
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: JDKVersion
+      jdkVersionOption: '21'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'clean test -X'
+    displayName: 'Run Maven Tests with Debug Logging'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'target/surefire-reports'
+      ArtifactName: 'surefire-reports'
+      publishLocation: 'Container'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'target/*.dump'
+      ArtifactName: 'dump-files'
+      publishLocation: 'Container'
+
+  - script: |
+      if [ -n "$CONFIG_SERVER_PID" ]; then
+        kill $CONFIG_SERVER_PID
+      fi
+      if [ -n "$EUREKA_SERVICE_PID" ]; then
+        kill $EUREKA_SERVICE_PID
+      fi
+    displayName: 'Stop Running Applications'
+    condition: always()

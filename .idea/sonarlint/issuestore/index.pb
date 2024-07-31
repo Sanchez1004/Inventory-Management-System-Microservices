@@ -230,3 +230,5 @@ Tinv-service/src/main/java/com/cesar/invservice/security/JwtAuthentitationFilter
 Kinv-service/src/main/java/com/cesar/invservice/security/SecurityConfig.java,1\4\140378ffdf876da241bd840c93ca54843b420607
 v
 Finv-service/src/main/java/com/cesar/invservice/config/FeignConfig.java,1\d\1df4d122d6f2d2376ee316c4b9d61d88bced73fe
+C
+azure-pipelines.yml,4\0\40ebc6823f24f296c0cd3fddd6ccda69b74ff2e4
