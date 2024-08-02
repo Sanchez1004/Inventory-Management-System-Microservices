@@ -22,7 +22,7 @@ import static io.jsonwebtoken.Jwts.builder;
 @Service
 public class JwtServiceImplementation implements JwtService {
 
-    @Value("${secret.key}")
+    @Value("${spring.security.secret.key}")
     private String secretKey;
 
     private static final long DEFAULT_TOKEN_VALIDITY = Duration.ofDays(1).toMillis();

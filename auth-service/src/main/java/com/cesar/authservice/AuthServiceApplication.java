@@ -17,8 +17,11 @@ public class AuthServiceApplication implements CommandLineRunner {
 
     private final AuthUserRepository authUserRepository;
 
-    @Value("${ADMIN_PASSWORD}")
+    @Value("${spring.security.admin.password}")
     private String adminPassword;
+
+    @Value("${spring.security.admin.mail}")
+    private String adminMail;
 
     public AuthServiceApplication(AuthUserRepository authUserRepository) {
         this.authUserRepository = authUserRepository;
@@ -33,7 +36,7 @@ public class AuthServiceApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (authUserRepository.findByRole(Role.ADMIN) == null) {
             authUserRepository.save(AuthUser.builder()
-                            .email("admin@mail.com")
+                            .email(adminMail)
                             .password(new BCryptPasswordEncoder().encode(adminPassword))
                             .firstName("ADMIN")
                             .lastName("ADMIN")

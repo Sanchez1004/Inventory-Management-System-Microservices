@@ -1,0 +1,55 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: envioronment values
+
+steps:
+  - task: MavenAuthenticate@0
+    inputs:
+      artifactsFeeds: 'your-feed'
+
+  - script: |
+      ls
+      sudo apt update
+      sudo apt install -y wget
+      wget https://download.oracle.com/java/22/archive/jdk-22.0.1_linux-x64_bin.tar.gz
+      sudo mkdir -p /usr/java
+      sudo tar -xzf jdk-22.0.1_linux-x64_bin.tar.gz -C /usr/java/
+      sudo update-alternatives --install /usr/bin/java java /usr/java/jdk-22.0.1/bin/java 1
+      sudo update-alternatives --install /usr/bin/javac javac /usr/java/jdk-22.0.1/bin/javac 1
+      sudo update-alternatives --set java /usr/java/jdk-22.0.1/bin/java
+      sudo update-alternatives --set javac /usr/java/jdk-22.0.1/bin/javac
+      java -version
+      javac -version
+    displayName: 'Install and Configure JDK 22'
+
+  - task: Maven@3
+    displayName: 'Build Config Server'
+    inputs:
+      mavenPomFile: 'config-server/pom.xml'
+      goals: 'clean package'
+      options: '-DskipTests'
+    env:
+      JAVA_HOME: $(JAVA_HOME)
+
+  - script: |
+      nohup java -jar config-server/target/config-server.jar &
+    displayName: 'Run Config Server'
+
+  - task: Maven@3
+    displayName: 'Build and Package Microservices'
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean package'
+    env:
+      JAVA_HOME: $(JAVA_HOME)
+    condition: succeeded()
+
+  - script: |
+      pkill -f 'config-server/target/config-server.jar'
+    displayName: 'Stop Config Server'
+    condition: always()

@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/config-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eureka-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/inv-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/inv-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/not-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ord-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rep-service/src/main/java" charset="UTF-8" />

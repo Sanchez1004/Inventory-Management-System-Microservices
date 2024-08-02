@@ -13,6 +13,11 @@ spring:
     admin:
       mail: ${ADMIN_MAIL}
       password: ${ADMIN_PASSWORD}
+  sleuth:
+    enabled: false
+    sampler: 0.0
+  zipkin:
+    enables: false
 
 eureka:
   instance:
@@ -21,8 +26,3 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0

@@ -8,8 +8,18 @@ spring:
     mongodb:
       uri: ${MONGOURI_AUTH_USERS}
   security:
-    api:
-      key: ${API_KEY}
+    secret:
+      key: ${SECRET_KEY}
+      api:
+        key: ${API_KEY}
+    admin:
+      mail: ${ADMIN_MAIL}
+      password: ${ADMIN_PASSWORD}
+  sleuth:
+    enabled: false
+    sampler: 0.0
+  zipkin:
+    enables: false
 
 eureka:
   client:
@@ -18,8 +28,3 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${random.uuid}
     prefer-ip-address: true
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0

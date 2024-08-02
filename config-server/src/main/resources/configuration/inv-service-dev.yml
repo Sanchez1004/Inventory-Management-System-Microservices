@@ -35,3 +35,8 @@ rabbitmq:
           name: ${RABBIT_INVENTORY_STRING_ROUTING_KEY}
         json:
           name: ${RABBIT_INVENTORY_JSON_ROUTING_KEY}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

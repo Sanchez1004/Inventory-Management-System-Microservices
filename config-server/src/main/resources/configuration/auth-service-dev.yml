@@ -13,3 +13,8 @@ eureka:
     enabled: false
   instance:
     enabled: false
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
