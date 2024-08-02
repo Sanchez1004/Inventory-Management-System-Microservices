@@ -9,5 +9,4 @@ class InvServiceApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
