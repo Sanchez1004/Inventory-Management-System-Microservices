@@ -25,4 +25,4 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: https://eureka-service.icywater-e8b8ee0a.eastus.azurecontainerapps.io/eureka

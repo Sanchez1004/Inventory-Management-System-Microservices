@@ -4,4 +4,4 @@ spring:
   application:
     name: ord-service
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:https://config-server.icywater-e8b8ee0a.eastus.azurecontainerapps.io

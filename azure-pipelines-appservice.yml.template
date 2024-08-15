@@ -1,0 +1,107 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: environment values
+
+steps:
+  - task: MavenAuthenticate@0
+    inputs:
+      artifactsFeeds: 'your-feed'
+
+  - script: |
+      ls
+      sudo apt update
+      sudo apt install -y wget
+      wget https://download.oracle.com/java/22/archive/jdk-22.0.1_linux-x64_bin.tar.gz
+      sudo mkdir -p /usr/java
+      sudo tar -xzf jdk-22.0.1_linux-x64_bin.tar.gz -C /usr/java/
+      sudo update-alternatives --install /usr/bin/java java /usr/java/jdk-22.0.1/bin/java 1
+      sudo update-alternatives --install /usr/bin/javac javac /usr/java/jdk-22.0.1/bin/javac 1
+      sudo update-alternatives --set java /usr/java/jdk-22.0.1/bin/java
+      sudo update-alternatives --set javac /usr/java/jdk-22.0.1/bin/javac
+      java -version
+      javac -version
+    displayName: 'Install and Configure JDK 22'
+
+  - task: Maven@3
+    displayName: 'Build Config Server'
+    inputs:
+      mavenPomFile: 'config-server/pom.xml'
+      goals: 'clean package'
+      options: '-DskipTests'
+    env:
+      JAVA_HOME: $(JAVA_HOME)
+
+  - script: |
+      nohup java -jar config-server/target/config-server.jar &
+    displayName: 'Run Config Server'
+
+  - task: Maven@3
+    displayName: 'Build and Package Microservices'
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'package'
+      options: '-pl !config-server -am -amd'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    env:
+      JAVA_HOME: $(JAVA_HOME)
+    condition: succeeded()
+
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/target/*.jar'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: 'Copy JAR files to staging directory'
+
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     pathToPublish: '$(Build.ArtifactStagingDirectory)'
+  #     artifactName: 'drop'
+  #     publishLocation: 'Container'
+  #   displayName: 'Publish Artifact: JAR files'
+
+  # - task: AzureWebApp@1
+  #   inputs:
+  #     azureSubscription: $(AZURE_SUBSCRIPTION)
+  #     appName: $(AZURE_APP_NAME)
+  #     package: '$(Build.ArtifactStagingDirectory)/**/target/*.jar'
+  #     appType: webApp
+
+  # Second solution
+  # - script: |
+  #     mkdir -p $(Build.ArtifactStagingDirectory)/jars
+  #     cp **/target/*.jar $(Build.ArtifactStagingDirectory)/jars/
+  #     cd $(Build.ArtifactStagingDirectory)
+  #     zip -r jars.zip jars
+  #   displayName: 'Package JAR files into ZIP'
+
+  # - task: PublishBuildArtifacts@1
+  #   inputs:
+  #     pathToPublish: '$(Build.ArtifactStagingDirectory)/jars.zip'
+  #     artifactName: 'drop'
+  #     publishLocation: 'Container'
+  #   displayName: 'Publish Artifact: ZIP file'
+
+  # - task: AzureWebApp@1
+  #   inputs:
+  #     azureSubscription: $(AZURE_SUBSCRIPTION)
+  #     appName: $(AZURE_APP_NAME)
+  #     package: '$(Build.ArtifactStagingDirectory)/jars.zip'
+  #     appType: webApp
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+    displayName: 'Publish Artifact: JAR files'
+
+  - script: |
+      pkill -f 'config-server/target/config-server.jar'
+    displayName: 'Stop Config Server'
+    condition: always()

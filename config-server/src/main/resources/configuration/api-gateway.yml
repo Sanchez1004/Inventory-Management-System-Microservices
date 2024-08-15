@@ -35,12 +35,17 @@ spring:
           predicates:
             - Path=/api/orders/**
 
+        - id: not-service
+          uri: lb://not-service
+          predicates:
+            - Path=/api/notifications/**
+  sleuth:
+    enabled: false
+    sampler: 0.0
+  zipkin:
+    enables: false
+
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
+      defaultZone: https://eureka-service.icywater-e8b8ee0a.eastus.azurecontainerapps.io/eureka

@@ -9,6 +9,9 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
   server:
     enable-self-preservation: true
     eviction-interval-timer: 10

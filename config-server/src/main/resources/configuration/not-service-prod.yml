@@ -6,7 +6,12 @@ spring:
     api:
       key: ${API_KEY}
   application:
-    name: us-service
+    name: not-service
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
   data:
     mongodb:
       uri: ${MONGOURI_USERS}
@@ -22,7 +27,7 @@ eureka:
     prefer-ip-address: true
   client:
       service-url:
-        defaultZone: http://localhost:8761/eureka/
+        defaultZone: https://eureka-service.icywater-e8b8ee0a.eastus.azurecontainerapps.io/eureka
 
 rabbitmq:
   exchange:

@@ -228,8 +228,6 @@ Linv-service/src/main/java/com/cesar/invservice/client/AuthServiceClient.java,0
 Tinv-service/src/main/java/com/cesar/invservice/security/JwtAuthentitationFilter.java,f\5\f5e1fd14ab323e42b78ee46390df6df90a54de63
 {
 Kinv-service/src/main/java/com/cesar/invservice/security/SecurityConfig.java,1\4\140378ffdf876da241bd840c93ca54843b420607
-C
-azure-pipelines.yml,4\0\40ebc6823f24f296c0cd3fddd6ccda69b74ff2e4
 ~
 Ninv-service/src/test/java/com/cesar/invservice/InvServiceApplicationTests.java,b\a\ba8404d19b3abb65ec90a97d258cf1016d4d51cf
 @
@@ -248,3 +246,11 @@ A
 auth-service/.env,a\1\a1e8d0f6fb261b75ec56cf6c87fcf55e97f90610
 @
 api-gateway/.env,1\f\1ff700a94367fdc790c1e67aca7ea030a6ad5517
+W
+'azure-pipelines-appservice.yml.template,4\9\4917fe4b554f7e707c3e487a3bd4997ad953b220
+å
+\not-service/src/main/java/com/cesar/notservice/controller/NotificationServiceController.java,a\0\a0f13ba36687eeba0554037c823ee59b23cfdbcf
+é
+^us-service/src/test/java/com/cesar/usservice/service/implementation/ClientServiceImplTest.java,7\c\7c3f87c44e1b7eacda869705f6eb54f68dd4fd1d
+Å
+Qus-service/src/test/java/com/cesar/usservice/repository/ClientRepositoryTest.java,5\7\5790547015afe2b977325641e2ebc68434329b28
