@@ -254,3 +254,5 @@ W
 ^us-service/src/test/java/com/cesar/usservice/service/implementation/ClientServiceImplTest.java,7\c\7c3f87c44e1b7eacda869705f6eb54f68dd4fd1d
 Å
 Qus-service/src/test/java/com/cesar/usservice/repository/ClientRepositoryTest.java,5\7\5790547015afe2b977325641e2ebc68434329b28
+X
+(azure-pipelines-spring-apps.yml.template,1\8\18d1b9971ee6be1c49734ebe3381d2ae80a3f600

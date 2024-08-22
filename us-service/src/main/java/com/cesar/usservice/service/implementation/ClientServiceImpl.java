@@ -24,7 +24,6 @@ import java.util.function.BiConsumer;
 public class ClientServiceImpl implements ClientService {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
-
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
     private final Map<ClientField, BiConsumer<ClientEntity, ClientDTO>> updateFieldMap = new EnumMap<>(ClientField.class);
@@ -65,7 +64,7 @@ public class ClientServiceImpl implements ClientService {
         updateFieldMap.put(ClientField.ORDER_DETAILS, (entity, request) -> {
             if (request.getPendingOrders() != null) {
                 List<OrderDetailsDTO> orderList = entity.getPendingOrders();
-                OrderDetailsDTO newOrderDetails = request.getPendingOrders().getFirst();
+                OrderDetailsDTO newOrderDetails = request.getPendingOrders().get(0);
 
                 updateItemList(orderList, newOrderDetails, entity);
             }
@@ -122,12 +121,17 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO saveClient(ClientDTO clientDTO) {
-        if (clientDTO.getId() != null && clientDTO.getFirstName() != null && clientDTO.getEmail() != null) {
+        if (clientDTO == null) {
+            throw new ClientException("ClientDTO cannot be null");
+        }
+        if (!clientDTO.getFirstName().isEmpty() && !clientDTO.getEmail().isEmpty() && !clientDTO.getId().isEmpty()) {
             if (clientRepository.findById(clientDTO.getId()).isPresent()) {
-                logger.info("User with id : {} already exists", clientDTO.getId());
+                logger.info("User with id : '{}' already exists", clientDTO.getId());
                 throw new ClientException("User already exists");
             }
-            return clientMapper.toDTO(clientRepository.save(clientMapper.toEntity(clientDTO)));
+            ClientEntity newClient = clientMapper.toEntity(clientDTO);
+            ClientEntity createdClient = clientRepository.save(newClient);
+            return clientMapper.toDTO(createdClient);
         }
         logger.error("Basic fields of new client are empty");
         throw new ClientException("User id, email and first name cannot be empty");

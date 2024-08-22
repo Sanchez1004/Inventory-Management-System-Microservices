@@ -62,7 +62,7 @@ class ClientRepositoryTest {
 
         Optional<ClientEntity> existentClient = clientRepository.findClientEntityById("1");
 
-        assertNotNull(existentClient);
+        assertNotNull(existentClient, "User name: " + existentClient.get().getFirstName());
         existentClient.ifPresent(entity -> assertEquals("TestFirstName", entity.getFirstName()));
     }
 
