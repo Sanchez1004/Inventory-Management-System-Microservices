@@ -94,7 +94,7 @@ class ClientServiceImplTest {
         logger.info("Client DTO:    {}", clientDTO);
 
         when(clientRepository.findById(clientEntity.getId())).thenReturn(Optional.empty());
-        when(clientMapper.toEntity(clientDTO)).thenReturn(clientEntity);a
+        when(clientMapper.toEntity(clientDTO)).thenReturn(clientEntity);
         when(clientRepository.save(clientEntity)).thenReturn(clientEntity);
         when(clientMapper.toDTO(clientEntity)).thenReturn(clientDTO);
 

@@ -1,6 +1,6 @@
 # Inventory Microservices Backend Monorepo with Java, Maven, and Spring Boot
 ![img.png](diagram.png)
-## Table of Contents
+## Table of Content
 1. [Overview](#overview)
 2. [Architecture](#architecture)
     - [Authentication Service](#authentication-service)
@@ -123,11 +123,11 @@ RabbitMQ is used for asynchronous communication between microservices, deployed 
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/microservices-monorepo.git
+    git clone https://github.com/Sanchez1004/Inventory-Management-System-Microservices
     ```
 2. Navigate to the project directory:
     ```bash
-    cd microservices-monorepo
+    cd Inventory-Management-System-Microservices
     ```
 3. Build the project using Maven:
     ```bash
@@ -135,7 +135,7 @@ RabbitMQ is used for asynchronous communication between microservices, deployed 
     ```
 
 ### Running the Services
-- To start 'x' service locally using mvn & spring in the root directory. The first service that should be run is config-server then eureka-service, the last service needed to run is the api-gateway:
+- To start 'x' service locally using mvn & spring in the root directory. The first services that should be started are config-server then eureka-service, the last service needed to be started is the api-gateway:
     ```bash
   cd <service_directory>
   mvn clean install
@@ -145,7 +145,7 @@ RabbitMQ is used for asynchronous communication between microservices, deployed 
 ### Running in Azure
 - To deploy the services to Azure, follow the steps in the [Azure Spring Apps Pipeline](#azure-spring-apps-pipeline) section or deploy it one by one using Azure CLI. Maje sure to replace the <> with the respective names and paths:
   ```bash
-   az login
+  az login
   az group create --name <group_name> --location <location>
   az spring create --resource-group <group_name> --name <service_name>
   az spring app create --name <app_name> --resource-group <group_name> --service <service_name> --runtime-version Java_17 --memory 2Gi
