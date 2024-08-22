@@ -1,5 +1,5 @@
 # Inventory Microservices Backend Monorepo with Java, Maven, and Spring Boot
-![img.png](diagram.png)
+![diagram.png](diagram.png)
 ## Table of Content
 1. [Overview](#overview)
 2. [Architecture](#architecture)
