@@ -30,7 +30,7 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-      defaultZone: https://eureka-service.icywater-e8b8ee0a.eastus.azurecontainerapps.io/eureka
+      defaultZone: ${DISCOVERY_SERVER_URI}
 
 rabbitmq:
   exchange:

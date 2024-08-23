@@ -4,4 +4,4 @@ spring:
   application:
     name: not-service
   config:
-    import: optional:configserver:https://config-server.icywater-e8b8ee0a.eastus.azurecontainerapps.io #http://localhost:8888
+    import: optional:configserver:${CONFIGSERVER_URI} #http://localhost:8888

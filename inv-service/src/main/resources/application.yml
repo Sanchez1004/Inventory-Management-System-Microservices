@@ -4,4 +4,4 @@ spring:
   application:
     name: inv-service
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:${CONFIGSERVER_URI}

@@ -2,4 +2,4 @@ spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:https://config-server.icywater-e8b8ee0a.eastus.azurecontainerapps.io
+    import: optional:configserver:${CONFIGSERVER_URI}
