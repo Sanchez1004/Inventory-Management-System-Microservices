@@ -16,6 +16,9 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+/**
+ * Implementation of the SupplierService interface, handling business logic for supplier-related operations.
+ */
 @Service
 public class SupplierServiceImpl implements SupplierService {
 
@@ -32,6 +35,9 @@ public class SupplierServiceImpl implements SupplierService {
         initializeUpdateFieldMap();
     }
 
+    /**
+     * Initializes the map that defines how to update each field of a supplier.
+     */
     private void initializeUpdateFieldMap() {
         updateFieldMap.put(SupplierField.ID, (entity, request) -> {
             if (request != null) {
@@ -53,24 +59,49 @@ public class SupplierServiceImpl implements SupplierService {
                 entity.setAddress(request.getAddress());
             }
         });
-        updateFieldMap.put(SupplierField.MAX_QUOTA, (entity, request) -> {
-            if (request.getAddress() != null) {
-                entity.setMaxQuota(request.getMaxQuota());
-            }
-        });
-        updateFieldMap.put(SupplierField.MIN_QUOTA, (entity, request) -> {
-            if (request.getAddress() != null) {
-                entity.setMinQuota(request.getMinQuota());
-            }
-        });
+        updateFieldMap.put(SupplierField.MAX_QUOTA, this::maxQuota);
+        updateFieldMap.put(SupplierField.MIN_QUOTA, this::minQuota);
     }
 
+    private void maxQuota(SupplierEntity entity, SupplierDTO request) {
+        if (request.getMaxQuota() == 0) {
+            entity.setMaxQuota(999999999);
+        }
+        if (request.getMaxQuota() > 0 && request.getMaxQuota() > entity.getMinQuota() && request.getMaxQuota() != entity.getMaxQuota()) {
+            entity.setMaxQuota(request.getMaxQuota());
+        }
+    }
+
+    private void minQuota(SupplierEntity entity, SupplierDTO request) {
+        if (request.getMinQuota() == 0) {
+            entity.setMinQuota(999999999);
+        }
+        if (request.getMinQuota() > 0 && request.getMinQuota() < entity.getMinQuota()) {
+            entity.setMinQuota(request.getMinQuota());
+        }
+    }
+
+
+    /**
+     * Retrieves a supplier by its ID.
+     *
+     * @param id the ID of the supplier
+     * @return the SupplierDTO
+     * @throws SupplierException if the supplier is not found
+     */
     @Override
     public SupplierDTO getSupplierById(String id) {
         return supplierMapper.toDTO(supplierRepository.findSupplierEntityById(id)
                 .orElseThrow(() -> new SupplierException("User not found with id: " + id)));
     }
 
+    /**
+     * Saves a new supplier.
+     *
+     * @param supplierDTO the supplier data to be saved
+     * @return the saved SupplierDTO
+     * @throws SupplierException if the supplier already exists or required fields are missing
+     */
     @Override
     public SupplierDTO saveSupplier(SupplierDTO supplierDTO) {
         if (supplierDTO.getId() != null && supplierDTO.getName() != null && supplierDTO.getEmail() != null) {
@@ -83,6 +114,15 @@ public class SupplierServiceImpl implements SupplierService {
         throw new SupplierException("User id, email and name cannot be empty");
     }
 
+    /**
+     * Updates an existing supplier by its ID.
+     *
+     * @param supplierDTO the new data for the supplier
+     * @param id          the ID of the supplier to update
+     * @return the updated SupplierDTO
+     * @throws ClientException   if the supplier data is null
+     * @throws SupplierException if the supplier is not found
+     */
     @Override
     public SupplierDTO updateSupplierById(SupplierDTO supplierDTO, String id) {
         if (supplierDTO == null) {
@@ -99,12 +139,19 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierMapper.toDTO(supplierRepository.save(supplierEntity));
     }
 
+    /**
+     * Deletes a supplier by its ID.
+     *
+     * @param id the ID of the supplier to delete
+     * @return a confirmation message
+     * @throws SupplierException if the supplier is not found
+     */
     @Override
     public String deleteSupplierById(String id) {
         SupplierEntity supplierEntity = supplierMapper.toEntity(getSupplierById(id));
         if (supplierEntity != null) {
             supplierRepository.delete(supplierEntity);
-            return "User with id: " + id + "successfully deleted";
+            return "User with id: " + id + " successfully deleted";
         }
         logger.info("User not found with id {}", id);
         throw new SupplierException("User not found with id: " + id);

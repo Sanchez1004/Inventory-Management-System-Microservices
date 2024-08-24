@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/users/clients/**").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/users/suppliers/**").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers(("/api/users/no-auth")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(manager -> manager
